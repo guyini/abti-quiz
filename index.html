@@ -11,8 +11,7 @@
         #app { width: 100%; max-width: 420px; background: white; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); overflow: hidden; }
         .quiz-box { padding: 40px 25px; text-align: center; }
         .question-text { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 30px; line-height: 1.5; min-height: 60px; }
-        .option-btn { display: block; width: 100%; padding: 18px 20px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 18px; background: white; font-size: 16px; cursor: pointer; text-align: left; transition: 0.2s; }
-        .option-btn:active { background: #f0f0f0; transform: scale(0.98); }
+        .option-btn { display: block; width: 100%; padding: 18px 20px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 18px; background: white; font-size: 16px; cursor: pointer; text-align: left; }
         #result { display: none; text-align: center; padding-bottom: 40px; }
         .color-card { height: 260px; margin: 0 20px; border-radius: 24px; background-size: contain; background-repeat: no-repeat; background-position: center; }
         .res-name { font-size: 36px; font-weight: 900; margin-top: 20px; }
@@ -46,39 +45,44 @@
 
 <script class="notranslate">
     const questions = [
+        // 1-4题：O(器材) vs T(技术)
         {q:"攒了一笔钱，你第一反应是？",a:"换一套更高端的器材",b:"报个大师课磨练技术",t:"OT"},
         {q:"新的一年，你最想得到的礼物是？",a:"顶级弓片或瞄具",b:"顶级教练的一次指导",t:"OT"},
         {q:"遇到瓶颈时，你下意识觉得？",a:"也许该调调器材了",b:"绝对是动作出了问题",t:"OT"},
+        {q:"计分赛前你通常会？",a:"反复检查器材螺丝是否拧紧",b:"反复在脑子里过动作流程",t:"OT"},
+        // 5-8题：P(专注/专业) vs F(社交/气氛)
         {q:"在箭馆练习时，你的手机通常？",a:"在录动作，几乎不看消息",b:"架在旁边，准备拍帅视频",t:"PF"},
         {q:"当有人主动指点你的动作时？",a:"礼貌点头，继续按计划练",b:"很高兴，顺便聊聊器材黑话",t:"PF"},
         {q:"你在箭馆最无法忍受的行为是？",a:"有人大声喧哗影响专注",b:"环境太闷，连个拍照背景都没有",t:"PF"},
+        {q:"训练频率你是哪一类？",a:"像上班一样打卡，风雨无阻",b:"随缘出没，主要看老友在不在",t:"PF"},
+        // 9-11题：C(冷静) vs B(波动)
         {q:"计分赛落后 1 环，最后一箭你会？",a:"深呼吸，脑子里只有流程",b:"心跳加速，手指开始不听话",t:"CB"},
         {q:"计分赛打出了一个 6 环，下一箭？",a:"忘记刚才，按标准继续",b:"疯狂纠结，动作开始变形",t:"CB"},
         {q:"有人在你瞄准时大声说话，你会？",a:"完全屏蔽，心如止水",b:"瞬间断网，心态有点波动",t:"CB"},
+        // 12-14题：M(竞技/精密) vs H(传统/手感)
         {q:"理想的射箭体验是？",a:"专业、规则严明的场地赛",b:"野外、随性的山林局",t:"MH"},
         {q:"关于“瞄准”，你的看法是？",a:"必须用精密瞄具追求精度",b:"靠手感追求“用意不用力”",t:"MH"},
-        {q:"你射箭的最终动力是？",a:"打出完美的满环数据",b:"感悟人弓合一的传统韵律",t:"MH"},
-        {q:"训练频率你是哪一类？",a:"像上班一样打卡，风雨无阻",b:"随缘出没，主要看老友在不在",t:"PF"},
-        {q:"计分赛前你通常会？",a:"反复检查器材螺丝是否拧紧",b:"先拍一张箭袋和靶纸的合影",t:"OT"}
+        {q:"你射箭的最终动力是？",a:"打出完美的满环数据",b:"感悟人弓合一的传统韵律",t:"MH"}
     ];
 
     const resultsData = {
-        "OPCM":{n:"人形卡尺",c:"10-10-10",cl:"blue",d:"追求极致精密。你不需要社交，你只需要十环。"},
-        "TPCM":{n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"只要动作在审美线上，脱靶也要脱得优雅。"},
-        "TPCH":{n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"只想安静打完300支箭。你戴的不是耳机，是防火墙。"},
-        "OPCH":{n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"比起中靶，更看重开弓的精气神。古礼不能废。"},
-        "TFBM":{n:"擦边艺术家",c:"CBZ",cl:"green",d:"环线附近的钉子户，不仅射箭，还负责整活。"},
-        "TFBH":{n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"箭靶只是参考，广阔的草丛才是你的舞台。"},
-        "OFBH":{n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"把箭馆变成国风发布会。只要快门声够响就值了。"},
+        // 这里的 Key 严格遵循 [OT][PF][CB][MH] 逻辑
+        "OPCM":{n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"器材发烧友。只要你弓响声不对，他比你还难受。"},
+        "TFCH":{n:"扫地僧",c:"MONK",cl:"yellow",d:"隐于市的修行者。瞄具是弱者的拐杖，你不说话，但全场都知道你是天花板。"},
+        "TFBM":{n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"拒绝工业精密，迷恋纯粹手感。这种“感觉”就是你的超能力。"},
+        "OPBM":{n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"他眼里的靶纸没有环数，只有中间那个唯一的 X。"},
+        "OPCH":{n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"比起中靶，更看重开弓那一刻的精气神。古礼不能废。"},
+        "TPCM":{n:"人形卡尺",c:"10-10-10",cl:"blue",d:"追求极致精密。你不需要社交，你只需要十环。"},
+        "TPCH":{n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"最烦别人搭话，只想静静打完300支箭。"},
+        "OFCM":{n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"脱靶也要脱得优雅，是你的最后底线。"},
+        "TFBH":{n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"拿着最难练的传统弓死磕。追求用意不用力的玄学瞬间。"},
         "TFCM":{n:"节奏大师",c:"SWING",cl:"green",d:"对节奏感要求极高。弦响瞬间，压力瞬间和解。"},
-        "OPBM":{n:"悲情练习生",c:"I'm SHY",cl:"purple",d:"独自练习是战神，有人围观就炸坑。"},
+        "OFBH":{n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"只要快门声够响，撒放那一刻的仪态值回票价。"},
+        "TFBH":{n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"箭靶只是参考，广阔的草丛才是你的舞台。"},
+        "OFBM":{n:"擦边艺术家",c:"CBZ",cl:"green",d:"环线附近的钉子户，箭馆快乐担当。"},
         "TPBM":{n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"动作版本永远在优化，从未稳定上线。"},
-        "TTBH":{n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"拿着最难练的传统弓死磕。追求用意不用力的瞬间。"},
-        "OFCM":{n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"随手一放皆是天意。无欲则刚，反而高分。"},
-        "OTCH":{n:"扫地僧",c:"MONK",cl:"yellow",d:"隐于市的修行者。瞄具是弱者的拐杖，你就是天花板。"},
-        "TTCH":{n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"拒绝工业精密，迷恋纯粹手感。手感就是超能力。"},
-        "TBCM":{n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"他说他瞎射的。他眼里没有环数，只有中间的 X。"},
-        "OBCM":{n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"只要你弓响声不对，他比你还难受。"}
+        "OPBM":{n:"悲情练习生",c:"I'm SHY",cl:"purple",d:"独自练习是战神，有人围观就炸坑。"},
+        "OFCM":{n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"随手一放，皆是天意。无欲则刚。"}
     };
 
     let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0}, finalCode="";
@@ -93,23 +97,15 @@
     function h(c){ s[c]++; step++; if(step<14) showQ(); else render(); }
 
     function render(){
-        // 核心修正：平分时（2:2）优先选择特定的维度，打破死循环
+        // 修正逻辑：平分时默认选择
         finalCode = (s.O >= s.T ? "O" : "T") + (s.P >= s.F ? "P" : "F") + (s.C >= s.B ? "C" : "B") + (s.M >= s.H ? "M" : "H");
         
-        // 特殊逻辑注入：如果用户精准选择了“传统大神”或“扫地僧”的特质，强制修正代码
-        // 这是为了解决 14 题结构下 O/T 容易互相抵消的问题
-        if(s.H >= 2 && s.T >= 2) { 
-             // 如果传统分高且动作分高，大概率是黄色系，确保 T 维度正确
-             let temp = "T" + (s.P >= s.F ? "P" : "F") + (s.C >= s.B ? "C" : "B") + "H";
-             if(resultsData[temp]) finalCode = temp;
-        }
-
-        const d = resultsData[finalCode] || resultsData["OPCM"];
+        const d = resultsData[finalCode] || resultsData["TPCM"]; // 默认回退到卡尺
         document.getElementById('quiz').style.display='none';
         document.getElementById('result').style.display='block';
         const card = document.getElementById('res-card');
         card.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-bg`);
-        card.style.backgroundImage = `url('${finalCode}.png')`;
+        card.style.backgroundImage = `url('${finalCode}.png')`; // 这里依然用算出来的代码找图
         document.getElementById('res-name').innerText = d.n;
         document.getElementById('res-code').innerText = d.c;
         const box = document.getElementById('res-desc');
