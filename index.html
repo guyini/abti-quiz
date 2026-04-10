@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" translate="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABTI箭格鉴定局</title>
     <style>
@@ -9,65 +10,81 @@
         body { font-family: sans-serif; background: #f5f5f5; margin: 0; display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
         #app { width: 100%; max-width: 420px; background: white; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); overflow: hidden; }
         .quiz-box { padding: 40px 25px; text-align: center; }
-        .question-text { font-size: 22px; font-weight: bold; color: #333; margin-bottom: 30px; }
-        .option-btn { display: block; width: 100%; padding: 18px 20px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 18px; background: white; font-size: 16px; cursor: pointer; text-align: left; }
+        .question-text { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 30px; line-height: 1.5; min-height: 60px; }
+        .option-btn { display: block; width: 100%; padding: 18px 20px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 18px; background: white; font-size: 16px; cursor: pointer; text-align: left; transition: 0.2s; }
+        .option-btn:active { background: #f0f0f0; transform: scale(0.98); }
         #result { display: none; text-align: center; padding-bottom: 40px; }
         .color-card { height: 260px; margin: 0 20px; border-radius: 24px; background-size: contain; background-repeat: no-repeat; background-position: center; }
-        .res-name { font-size: 40px; font-weight: 900; margin-top: 20px; }
-        .res-code { font-size: 30px; font-weight: 900; opacity: 0.8; margin-bottom: 20px; }
-        .res-desc-box { margin: 0 30px; padding: 20px; border-radius: 20px; text-align: left; line-height: 1.6; }
-        .action-btn { display: block; width: 80%; margin: 20px auto 0; padding: 15px; border-radius: 15px; background: #333; color: white; font-weight: bold; border: none; cursor: pointer; }
-        .restart-btn { display: block; width: 80%; margin: 10px auto; background: none; color: #999; border: none; cursor: pointer; text-decoration: underline; }
+        .res-name { font-size: 36px; font-weight: 900; margin-top: 20px; }
+        .res-code { font-size: 24px; font-weight: 900; opacity: 0.6; margin-bottom: 20px; }
+        .res-desc-box { margin: 0 20px; padding: 20px; border-radius: 20px; text-align: left; line-height: 1.7; font-size: 15px; }
+        .action-btn { display: block; width: 85%; margin: 25px auto 0; padding: 16px; border-radius: 15px; background: #333; color: white; font-weight: bold; border: none; cursor: pointer; }
+        #canvas-mask { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; flex-direction:column; }
     </style>
 </head>
-<body>
-<div id="app">
+<body class="notranslate">
+<div id="app" class="notranslate">
     <div id="quiz" class="quiz-box">
-        <div id="step-info" style="color:#bbb; font-size:12px;">READY</div>
-        <div id="q-text" class="question-text">ABTI 打弓人箭格鉴定局</div>
-        <div id="q-options"><button class="option-btn" onclick="startQuiz()">开始鉴定</button></div>
+        <div id="step-info" style="color:#bbb; font-size:13px; margin-bottom:10px;">READY</div>
+        <div id="q-text" class="question-text">《除了黄区，你哪儿都能中》<br>ABTI 打弓人箭格鉴定局</div>
+        <div id="q-options"><button class="option-btn" style="text-align:center;" onclick="startQuiz()">进入鉴定局</button></div>
     </div>
     <div id="result">
-        <div style="padding:20px; color:#666;">你的箭格是：</div>
+        <div style="padding:20px; color:#666; font-weight:bold;">你的箭格类型是：</div>
         <div id="res-card" class="color-card"></div>
         <div class="res-name" id="res-name"></div>
         <div class="res-code" id="res-code"></div>
         <div id="res-desc" class="res-desc-box"></div>
-        <button class="action-btn" onclick="generateCanvasImage()">保存卡片</button>
-        <button class="restart-btn" onclick="location.reload()">重新测试</button>
+        <button class="action-btn" onclick="generateCanvasImage()">保存我的箭格卡片</button>
+        <button style="margin-top:15px; background:none; border:none; color:#999; text-decoration:underline;" onclick="location.reload()">重新测试</button>
     </div>
 </div>
-<div id="canvas-mask" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; justify-content:center; align-items:center; flex-direction:column;">
-    <img id="final-image" style="max-width:90%; border-radius:15px;">
-    <p style="color:white; margin-top:15px;">长按图片保存</p>
-    <button onclick="document.getElementById('canvas-mask').style.display='none'" style="margin-top:20px; color:white; background:none; border:1px solid white; padding:10px 20px; border-radius:10px;">关闭</button>
+<div id="canvas-mask" onclick="this.style.display='none'">
+    <img id="final-image" style="max-width:85%; border-radius:15px; box-shadow:0 0 20px rgba(0,0,0,0.5);">
+    <p style="color:white; margin-top:20px; font-weight:bold;">↑ 长按图片保存到相册 ↑</p>
+    <p style="color:#888; font-size:12px;">点击空白处关闭</p>
 </div>
-<script>
-    const questions = [{q:"攒了钱第一反应？",a:"换器材",b:"报大师课",t:"OT"},{q:"想要啥礼物？",a:"顶级瞄具",b:"大师指导",t:"OT"},{q:"遇瓶颈？",a:"调器材",b:"改动作",t:"OT"},{q:"练箭时手机？",a:"录动作",b:"拍帅片",t:"PF"},{q:"有人指点？",a:"自己练",b:"聊黑话",t:"PF"},{q:"最难忍受？",a:"太吵",b:"没地拍照",t:"PF"},{q:"落后1环？",a:"走流程",b:"心跳快",t:"CB"},{q:"打个6环？",a:"按标准来",b:"纠结变形",t:"CB"},{q:"有人说话？",a:"屏蔽",b:"断网",t:"CB"},{q:"理想体验？",a:"场地赛",b:"山林局",t:"MH"},{q:"瞄准？",a:"精密瞄具",b:"靠手感",t:"MH"},{q:"动力？",a:"满环数据",b:"人弓合一",t:"MH"},{q:"训练频率？",a:"准时打卡",b:"随缘出没",t:"PF"},{q:"赛前？",a:"检器材",b:"拍合影",t:"OT"}];
+<script class="notranslate">
+    const questions = [
+        {q:"攒了一笔钱，你第一反应是？",a:"换一套更高端的器材",b:"报个大师课磨练技术",t:"OT"},
+        {q:"新的一年，你最想得到的礼物是？",a:"顶级弓片或瞄具",b:"顶级教练的一次指导",t:"OT"},
+        {q:"遇到瓶颈时，你下意识觉得？",a:"也许该调调器材了",b:"绝对是动作出了问题",t:"OT"},
+        {q:"在箭馆练习时，你的手机通常？",a:"在录动作，几乎不看消息",b:"架在旁边，准备拍帅视频",t:"PF"},
+        {q:"当有人主动指点你的动作时？",a:"礼貌点头，继续按计划练", b:"很高兴，顺便聊聊器材黑话",t:"PF"},
+        {q:"你在箭馆最无法忍受的行为是？",a:"有人大声喧哗影响专注",b:"环境太闷，连个拍照背景都没有",t:"PF"},
+        {q:"计分赛落后 1 环，最后一箭你会？",a:"深呼吸，脑子里只有流程",b:"心跳加速，手指开始不听话",t:"CB"},
+        {q:"计分赛打出了一个 6 环，下一箭？",a:"忘记刚才，按标准继续",b:"疯狂纠结，动作开始变形",t:"CB"},
+        {q:"有人在你瞄准时大声说话，你会？",a:"完全屏蔽，心如止水",b:"瞬间断网，心态有点波动",t:"CB"},
+        {q:"理想的射箭体验是？",a:"专业、规则严明的场地赛",b:"野外、随性的山林局",t:"MH"},
+        {q:"关于“瞄准”，你的看法是？",a:"必须用精密瞄具追求精度",b:"靠手感追求“用意不用力”",t:"MH"},
+        {q:"你射箭的最终动力是？",a:"打出完美的满环数据",b:"感悟人弓合一的传统韵律",t:"MH"},
+        {q:"训练频率你是哪一类？",a:"像上班一样打卡，风雨无阻",b:"随缘出没，主要看老友在不在",t:"PF"},
+        {q:"计分赛前你通常会？",a:"反复检查器材螺丝是否拧紧",b:"先拍一张箭袋和靶纸的合影",t:"OT"}
+    ];
     const resultsData = {
-        "OPCM":{n:"人形卡尺",c:"10-10-10",cl:"blue",d:"追求极致精密。你不需要社交，你只需要十环。"},
-        "TPCM":{n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"动作必须优雅，脱靶也要脱得好看。"},
-        "TPCH":{n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"与世隔绝的防火墙，只想安静打完300支箭。"},
-        "OPCH":{n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"开弓的精气神最重要，古礼不能废。"},
-        "TFBM":{n:"擦边艺术家",c:"CBZ",cl:"green",d:"环线附近的钉子户，箭馆快乐担当。"},
-        "TFBH":{n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"箭靶只是参考，草丛才是舞台。"},
-        "OFBH":{n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"只要快门声够响，中不中那是后期的事。"},
-        "TFCM":{n:"节奏大师",c:"SWING",cl:"green",d:"对节奏要求极高，弦响瞬间压力和解。"},
-        "OPBM":{n:"悲情练习生",c:"I SHY",cl:"purple",d:"独自是战神，有人就炸坑。"},
-        "TPBM":{n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"动作版本永远在优化，从未稳定上线。"},
-        "TTBH":{n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"死磕传统弓，追求用意不用力的玄学。"},
-        "OFCM":{n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"随手一放皆是天意，无欲则刚。"},
-        "OTCH":{n:"扫地僧",c:"MONK",cl:"yellow",d:"隐于市的修行者，全场都知道你是天花板。"},
-        "TTCH":{n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"迷恋纯粹手感，反科学的存在。"},
-        "TBCM":{n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"他眼里的靶纸没有环数，只有中间的X。"},
-        "OBCM":{n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"弓响声不对他比你还难受，免费维修大师。"}
+        "OPCM":{n:"人形卡尺",c:"10-10-10",cl:"blue",d:"追求极致精密。如果这支箭没进十环，你一定会认为是物理定律偶尔失灵。你不需要社交，你只需要十环。"},
+        "TPCM":{n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"只要动作在审美线上，中不中黄区你都能原谅自己。脱靶也要脱得优雅，是你的最后底线。"},
+        "TPCH":{n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"最烦别人搭话，只想静静打完300支箭。你戴上的不是耳机，是与世隔绝的防火墙。"},
+        "OPCH":{n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"比起中靶，你更看重开弓那一刻的精气神。古礼不能废，范儿不能掉。"},
+        "TFBM":{n:"擦边艺术家",c:"CBZ",cl:"green",d:"环线附近的钉子户。你对环线的利用率高达 100%，不仅射箭，还负责整活，是箭馆的快乐氛围担当。"},
+        "TFBH":{n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"箭靶只是参考，广阔的草丛才是你的舞台。丢箭不丢人，寻宝才是正赛。"},
+        "OFBH":{n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"把箭馆变成国风发布会。只要快门声够清脆，撒放那一刻的仪态就值回票价。"},
+        "TFCM":{n:"节奏大师",c:"SWING",cl:"green",d:"你对器材要求不高，但对射箭的节奏感要求极高。弦响的那一刻，压力瞬间和解。"},
+        "OPBM":{n:"悲情练习生",c:"I'm SHY",cl:"purple",d:"独自练习是战神，有人围观就炸坑。你是射箭圈的社恐天花板，更享受一个人与弓的深夜对话。"},
+        "TPBM":{n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"动作永远在改，从未稳定上线。你是自己动作的首席内测员，版本号永远在优化中。"},
+        "TTBH":{n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"拿着最难练的传统弓死磕。你只追求那一发“用意不用力”的玄学瞬间。"},
+        "OFCM":{n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"随手一放，皆是天意。你射箭是为了放松，这种“无欲则刚”的状态反而让你打出离谱的高分。"},
+        "OTCH":{n:"扫地僧",c:"MONK",cl:"yellow",d:"隐于市的修行者。瞄具是弱者的拐杖，你不说话，但全场都知道你是天花板。"},
+        "TTCH":{n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"拒绝工业精密，迷恋纯粹手感。这种说不清、道不明的“感觉”就是你的超能力。"},
+        "TBCM":{n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"他说他瞎射的，只有你信了。他眼里的靶纸没有环数，只有中间那个唯一的 X。"},
+        "OBCM":{n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"只要你的弓响声不对，他比你还难受。箭馆免费维修大师。"}
     };
     let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0}, code="";
     function startQuiz(){ showQ(); }
     function showQ(){
-        const q=questions[step]; document.getElementById('step-info').innerText=`STEP ${step+1}/14`;
+        const q=questions[step]; document.getElementById('step-info').innerText=`第 ${step+1} 题 / 共 14 题`;
         document.getElementById('q-text').innerText=q.q;
-        document.getElementById('q-options').innerHTML=`<button class="option-btn" onclick="h('${q.t[0]}')">${q.a}</button><button class="option-btn" onclick="h('${q.t[1]}')">${q.b}</button>`;
+        document.getElementById('q-options').innerHTML=`<button class="option-btn" onclick="h('${q.t[0]}')">A. ${q.a}</button><button class="option-btn" onclick="h('${q.t[1]}')">B. ${q.b}</button>`;
     }
     function h(c){ s[c]++; step++; if(step<14) showQ(); else render(); }
     function render(){
@@ -84,9 +101,9 @@
         img.onload=function(){
             ctx.drawImage(img,200,150,400,400); ctx.fillStyle="#333"; ctx.font="bold 80px sans-serif"; ctx.fillText(d.n,400,650);
             ctx.fillStyle="#8d6e63"; ctx.font="bold 60px sans-serif"; ctx.fillText(d.c,400,740);
-            ctx.fillStyle="#f5f5f5"; ctx.fillRect(60,820,680,220); ctx.fillStyle="#333"; ctx.font="32px sans-serif"; ctx.textAlign="left";
+            ctx.fillStyle="#f5f5f5"; ctx.fillRect(60,820,680,240); ctx.fillStyle="#333"; ctx.font="30px sans-serif"; ctx.textAlign="left";
             let words=d.d.split(''), line='', y=880;
-            for(let n=0;n<words.length;n++){ let testLine=line+words[n]; if(ctx.measureText(testLine).width>600){ ctx.fillText(line,100,y); line=words[n]; y+=48; }else{ line=testLine; } }
+            for(let n=0;n<words.length;n++){ let testLine=line+words[n]; if(ctx.measureText(testLine).width>600){ ctx.fillText(line,100,y); line=words[n]; y+=45; }else{ line=testLine; } }
             ctx.fillText(line,100,y); document.getElementById('final-image').src=canvas.toDataURL(); document.getElementById('canvas-mask').style.display='flex';
         };
         img.onerror=function(){ img.onload(); };
