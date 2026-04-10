@@ -13,37 +13,27 @@
         }
         body { font-family: -apple-system, sans-serif; background: #f5f5f5; margin: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px; }
         #app { width: 100%; max-width: 420px; background: white; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
-        
         .quiz-box { padding: 40px 25px; text-align: center; }
         .progress { font-size: 14px; color: #bbb; margin-bottom: 10px; letter-spacing: 1px; }
         .question-text { font-size: 22px; font-weight: bold; color: #333; line-height: 1.4; min-height: 80px; margin-bottom: 30px; }
-        
         .option-btn { display: block; width: 100%; padding: 18px 20px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 18px; background: white; font-size: 16px; cursor: pointer; transition: 0.3s; text-align: left; line-height: 1.4; color: #444; }
         .option-btn:hover { border-color: #333; background: #fafafa; transform: translateY(-2px); }
-
         #result { display: none; background: white; padding-bottom: 40px; text-align: center;}
         .result-header { padding: 30px 20px 10px; font-size: 18px; font-weight: bold; color: #666; }
-        
         .color-card { height: 260px; margin: 0 20px; border-radius: 24px; background-size: contain; background-repeat: no-repeat; background-position: center; display: flex; justify-content: center; align-items: center; }
-        
         .res-name { font-size: 42px; font-weight: 900; color: #333; margin-top: 20px; margin-bottom: 5px; }
         .res-code { font-size: 36px; font-weight: 900; letter-spacing: 1px; margin: 0 0 30px 0; opacity: 0.8; }
-        
         .res-desc-box { margin: 0 10px; padding: 25px; border-radius: 20px; text-align: left; line-height: 1.7; font-size: 16px; min-height: 100px; }
-        
         .footer { margin-top: 40px; color: #ccc; font-size: 13px; font-weight: bold; }
         .contact-info { margin-top: 5px; color: #ddd; font-size: 11px; }
-        
         .action-btn { display: block; width: 80%; margin: 20px auto 0 auto; padding: 15px; border: none; border-radius: 15px; font-size: 16px; font-weight: bold; cursor: pointer; background: #333; color: white; }
         .restart-btn { display: block; width: 80%; margin: 15px auto 0 auto; background: none; color: #999; text-decoration: underline; font-size: 14px; border: none; cursor: pointer; padding: 10px; }
-
         #canvas-mask { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; flex-direction: column;}
         #final-image { max-width: 90%; max-height: 80%; border-radius: 15px; }
         .close-mask { margin-top: 20px; color: white; background: rgba(255,255,255,0.2); border: none; padding: 10px 20px; border-radius: 10px; }
     </style>
 </head>
 <body>
-
 <div id="app">
     <div id="quiz">
         <div class="quiz-box">
@@ -54,7 +44,6 @@
             </div>
         </div>
     </div>
-
     <div id="result">
         <div class="result-header">你的箭格类型是：</div>
         <div id="res-card" class="color-card"></div>
@@ -69,13 +58,11 @@
         <div class="contact-info">长沙百杨顾顾 wechat: gyndwxh</div>
     </div>
 </div>
-
 <div id="canvas-mask">
     <img id="final-image" src="" alt="ABTI 箭格卡片">
     <p style="color:white; margin-top:15px;">长按上方图片保存</p>
     <button class="close-mask" onclick="closeMask()">关闭预览</button>
 </div>
-
 <script>
     const questions = [
         { q: "攒了一笔钱，你第一反应是？", a: "换一套更高端的器材", b: "报个大师课磨练技术", type: "OT" },
@@ -93,7 +80,6 @@
         { q: "训练频率你是哪一类？", a: "像上班一样打卡，风雨无阻", b: "随缘出没，主要看老友在不在", type: "PF" },
         { q: "计分赛前你通常会？", a: "反复检查器材螺丝是否拧紧", b: "先拍一张箭袋和靶纸的合影", type: "OT" }
     ];
-
     const resultsData = {
         "OPCM": { name: "人形卡尺", code: "10-10-10", color: "blue", desc: "追求极致精密。如果这支箭没进十环，你一定会认为是物理定律偶尔失灵。你不需要社交，你只需要十环。" },
         "TPCM": { name: "动作质检员", code: "GOOD-POSER", color: "blue", desc: "只要动作在审美线上，中不中黄区你都能原谅自己。脱靶也要脱得优雅，是你的最后底线。" },
@@ -106,92 +92,52 @@
         "OPBM": { name: "悲情练习生", code: "I'm SHY", color: "purple", desc: "独自练习是战神，有人围观就炸坑。你是射箭圈的社恐天花板，更享受一个人与弓的深夜对话。" },
         "TPBM": { name: "流程优化专家", code: "ALWAYS-BETA", color: "purple", desc: "动作永远在改，从未稳定上线。你是自己动作的首席内测员，版本号永远在优化中。" },
         "TTBH": { name: "倔强青铜", code: "HARD-MODE", color: "purple", desc: "拿着最难练的传统弓死磕。你只追求那一发“用意不用力”的玄学瞬间。" },
-        "OFCM": { name: "佛系神箭手", code: "FREE-STYLE", color: "purple", desc: "随手一放，皆是天意。你射箭是为了放松，这种“无欲则刚”的状态反而让你打出离谱的高分。" },
+        "OFCM": { name: "佛系神箭手", code: "FREE-STYLE", color: "purple", desc: "随手一放，皆是天意。无欲则刚的状态经常让你打出离谱的高分。" },
         "OTCH": { name: "扫地僧", code: "MONK", color: "yellow", desc: "隐于市的修行者。瞄具是弱者的拐杖，你不说话，但全场都知道你是天花板。" },
         "TTCH": { name: "传统大神", code: "JUST-FEEL", color: "yellow", desc: "拒绝工业精密，迷恋纯粹手感。这种说不清、道不明的“感觉”就是你的超能力。" },
         "TBCM": { name: "随缘狙击手", code: "X-MAN", color: "yellow", desc: "他说他瞎射的，只有你信了。他眼里的靶纸没有环数，只有中间那个唯一的 X。" },
         "OBCM": { name: "器材质检员", code: "FIX-MAN", color: "yellow", desc: "只要你的弓响声不对，他比你还难受。箭馆免费维修大师。" }
     };
-
-    let currentStep = 0;
-    let scores = { O:0, T:0, P:0, F:0, C:0, B:0, M:0, H:0 };
-    let finalCode = "";
-
+    let currentStep = 0; let scores = { O:0, T:0, P:0, F:0, C:0, B:0, M:0, H:0 }; let finalCode = "";
     function startQuiz() { showQuestion(); }
-
     function showQuestion() {
         const qData = questions[currentStep];
         document.getElementById('step-info').innerText = `STEP ${currentStep + 1} / ${questions.length}`;
         document.getElementById('q-text').innerText = qData.q;
-        document.getElementById('q-options').innerHTML = `
-            <button class="option-btn" onclick="handleSelect('${qData.type[0]}')">${qData.a}</button>
-            <button class="option-btn" onclick="handleSelect('${qData.type[1]}')">${qData.b}</button>
-        `;
+        document.getElementById('q-options').innerHTML = `<button class="option-btn" onclick="handleSelect('${qData.type[0]}')">${qData.a}</button><button class="option-btn" onclick="handleSelect('${qData.type[1]}')">${qData.b}</button>`;
     }
-
     function handleSelect(choice) {
-        scores[choice]++;
-        currentStep++;
+        scores[choice]++; currentStep++;
         if(currentStep < questions.length) { showQuestion(); } else { renderFinalResult(); }
     }
-
     function renderFinalResult() {
         finalCode = (scores.O>=scores.T?'O':'T')+(scores.P>=scores.F?'P':'F')+(scores.C>=scores.B?'C':'B')+(scores.M>=scores.H?'M':'H');
         updateResultUI(finalCode);
     }
-
     function updateResultUI(targetCode) {
-        finalCode = targetCode;
-        const data = resultsData[targetCode] || resultsData["OPCM"];
-        document.getElementById('quiz').style.display = 'none';
-        document.getElementById('result').style.display = 'block';
-        
-        const card = document.getElementById('res-card');
-        const descBox = document.getElementById('res-desc');
-        const codeText = document.getElementById('res-code');
-        
+        finalCode = targetCode; const data = resultsData[targetCode] || resultsData["OPCM"];
+        document.getElementById('quiz').style.display = 'none'; document.getElementById('result').style.display = 'block';
+        const card = document.getElementById('res-card'); const descBox = document.getElementById('res-desc'); const codeText = document.getElementById('res-code');
         const bgColor = getComputedStyle(document.documentElement).getPropertyValue(`--${data.color}-bg`);
         const textColor = getComputedStyle(document.documentElement).getPropertyValue(`--${data.color}-text`);
-        
-        card.style.backgroundColor = bgColor;
-        card.style.backgroundImage = `url('${targetCode}.png')`;
-        descBox.style.backgroundColor = bgColor;
-        descBox.style.color = textColor;
-        codeText.style.color = textColor;
-        
-        document.getElementById('res-name').innerText = data.name;
-        codeText.innerText = data.code;
-        descBox.innerText = data.desc;
+        card.style.backgroundColor = bgColor; card.style.backgroundImage = `url('${targetCode}.png')`;
+        descBox.style.backgroundColor = bgColor; descBox.style.color = textColor; codeText.style.color = textColor;
+        document.getElementById('res-name').innerText = data.name; codeText.innerText = data.code; descBox.innerText = data.desc;
     }
-
-    window.updateResultUI = updateResultUI;
-
     function generateCanvasImage() {
         const data = resultsData[finalCode] || resultsData["OPCM"];
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
         canvas.width = 800; canvas.height = 1200;
-        
-        const colorMap = {
-            blue: { bg: "#e3f2fd", text: "#1976d2" },
-            green: { bg: "#e8f5e9", text: "#2e7d32" },
-            purple: { bg: "#f3e5f5", text: "#7b1fa2" },
-            yellow: { bg: "#fffde7", text: "#8d6e63" }
-        };
+        const colorMap = { blue: { bg: "#e3f2fd", text: "#1976d2" }, green: { bg: "#e8f5e9", text: "#2e7d32" }, purple: { bg: "#f3e5f5", text: "#7b1fa2" }, yellow: { bg: "#fffde7", text: "#8d6e63" } };
         const familyColor = colorMap[data.color];
-
         ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#333333"; ctx.font = "bold 36px sans-serif"; ctx.textAlign = "center";
-        ctx.fillText("《除了黄区，你哪儿都能中》", canvas.width / 2, 80);
-
-        const img = new Image();
-        img.src = `${finalCode}.png`;
+        ctx.fillStyle = "#333333"; ctx.font = "bold 36px sans-serif"; ctx.textAlign = "center"; ctx.fillText("《除了黄区，你哪儿都能中》", canvas.width / 2, 80);
+        const img = new Image(); img.src = `${finalCode}.png`;
         img.onload = function() {
             ctx.drawImage(img, 200, 150, 400, 400);
             ctx.fillStyle = "#333333"; ctx.font = "bold 80px sans-serif"; ctx.fillText(data.name, canvas.width / 2, 650);
             ctx.fillStyle = familyColor.text; ctx.font = "bold 60px sans-serif"; ctx.fillText(data.code, canvas.width / 2, 740);
-            ctx.fillStyle = familyColor.bg; 
-            drawRoundRect(ctx, 60, 820, 680, 220, 20);
+            ctx.fillStyle = familyColor.bg; drawRoundRect(ctx, 60, 820, 680, 220, 20);
             ctx.fillStyle = familyColor.text; ctx.font = "32px sans-serif"; ctx.textAlign = "left";
             drawWrapText(ctx, data.desc, 100, 880, 600, 48);
             ctx.fillStyle = "#cccccc"; ctx.font = "bold 24px sans-serif"; ctx.textAlign = "center";
@@ -199,23 +145,4 @@
             document.getElementById('final-image').src = canvas.toDataURL("image/png");
             document.getElementById('canvas-mask').style.display = 'flex';
         };
-        img.onerror = function() {
-            ctx.fillStyle = familyColor.bg; ctx.fillRect(200, 150, 400, 400);
-            img.onload();
-        };
-    }
-
-    function drawRoundRect(ctx, x, y, w, h, r) {
-        ctx.beginPath(); ctx.moveTo(x+r, y); ctx.arcTo(x+w, y, x+w, y+h, r); ctx.arcTo(x+w, y+h, x, y+h, r); ctx.arcTo(x, y+h, x, y, r); ctx.arcTo(x, y, x+w, y, r); ctx.closePath(); ctx.fill();
-    }
-    function drawWrapText(ctx, text, x, y, maxWidth, lineHeight) {
-        let words = text.split(''); let line = '';
-        for(let n = 0; n < words.length; n++) {
-            let testLine = line + words[n];
-            if (ctx.measureText(testLine).width > maxWidth && n > 0) { ctx.fillText(line, x, y); line = words[n]; y += lineHeight; } else { line = testLine; }
-        } ctx.fillText(line, x, y);
-    }
-    function closeMask() { document.getElementById('canvas-mask').style.display = 'none'; }
-</script>
-</body>
-</html>
+        img.onerror = function() { ctx.fillStyle = familyColor.bg; ctx.fillRect(200
