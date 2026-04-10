@@ -14,9 +14,9 @@
         .option-btn { display: block; width: 100%; padding: 18px 20px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 18px; background: white; font-size: 16px; cursor: pointer; text-align: left; }
         #result { display: none; text-align: center; padding-bottom: 40px; }
         .color-card { height: 260px; margin: 0 20px; border-radius: 24px; background-size: contain; background-repeat: no-repeat; background-position: center; }
-        .res-name { font-size: 36px; font-weight: 900; margin-top: 20px; }
-        .res-code { font-size: 24px; font-weight: 900; opacity: 0.6; margin-bottom: 20px; }
-        .res-desc-box { margin: 0 20px; padding: 20px; border-radius: 20px; text-align: left; line-height: 1.7; font-size: 15px; }
+        .res-name { font-size: 32px; font-weight: 900; margin-top: 20px; }
+        .res-code { font-size: 20px; font-weight: 900; opacity: 0.6; margin-bottom: 15px; }
+        .res-desc-box { margin: 0 20px; padding: 20px; border-radius: 20px; text-align: left; line-height: 1.6; font-size: 14px; }
         .action-btn { display: block; width: 85%; margin: 25px auto 0; padding: 16px; border-radius: 15px; background: #333; color: white; font-weight: bold; border: none; cursor: pointer; }
         #canvas-mask { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; flex-direction:column; }
     </style>
@@ -48,43 +48,36 @@
         {q:"攒了一笔钱，你第一反应是？",a:"换一套更高端的器材",b:"报个大师课磨练技术",t:"OT"},
         {q:"新的一年，你最想得到的礼物是？",a:"顶级弓片或瞄具",b:"顶级教练的一次指导",t:"OT"},
         {q:"遇到瓶颈时，你下意识觉得？",a:"也许该调调器材了",b:"绝对是动作出了问题",t:"OT"},
-        {q:"计分赛前你通常会？",a:"反复检查器材螺丝是否拧紧",b:"反复在脑子里过动作流程",t:"OT"},
-        {q:"在箭馆练习时，你的手机通常？",a:"在录动作，几乎不看消息",b:"架在旁边，准备拍帅视频",t:"PF"},
-        {q:"当有人主动指点你的动作时？",a:"礼貌点头，继续按计划练",b:"很高兴，顺便聊聊器材黑话",t:"PF"},
-        {q:"你在箭馆最无法忍受的行为是？",a:"有人大声喧哗影响专注",b:"环境太闷，连个拍照背景都没有",t:"PF"},
-        {q:"训练频率你是哪一类？",a:"像上班一样打卡，风雨无阻",b:"随缘出没，主要看老友在不在",t:"PF"},
-        {q:"计分赛落后 1 环，最后一箭你会？",a:"深呼吸，脑子里只有流程",b:"心跳加速，手指开始不听话",t:"CB"},
-        {q:"计分赛打出了一个 6 环，下一箭？",a:"忘记刚才，按标准继续",b:"疯狂纠结，动作开始变形",t:"CB"},
-        {q:"有人在你瞄准时大声说话，你会？",a:"完全屏蔽，心如止水",b:"瞬间断网，心态有点波动",t:"CB"},
-        {q:"理想的射箭体验是？",a:"专业、规则严明的场地赛",b:"野外、随性的山林局",t:"MH"},
-        {q:"关于“瞄准”，你的看法是？",a:"必须用精密瞄具追求精度",b:"靠手感追求“用意不用力”",t:"MH"},
-        {q:"你射箭的最终动力是？",a:"打出完美的满环数据",b:"感悟人弓合一的传统韵律",t:"MH"}
+        {q:"计分赛前你通常会？",a:"检查器材螺丝",b:"复盘动作流程",t:"OT"},
+        {q:"练习射箭时，你的手机通常？",a:"录动作，不看消息",b:"拍视频，准备发朋友圈",t:"PF"},
+        {q:"当有人主动指点你的动作时？",a:"礼貌点头继续练",b:"很高兴顺便聊器材",t:"PF"},
+        {q:"你在箭馆最无法忍受的是？",a:"有人吵闹影响专注",b:"环境太闷没法拍照",t:"PF"},
+        {q:"你的训练频率更接近？",a:"打卡准时像上班",b:"随缘出没看心情",t:"PF"},
+        {q:"计分赛落后 1 环，最后一箭？",a:"脑子里只有流程",b:"心跳加速手发抖",t:"CB"},
+        {q:"计分赛打了个 6 环，下一箭？",a:"忘记刚才按标准来",b:"纠结心态动作变形",t:"CB"},
+        {q:"有人在瞄准时说话，你会？",a:"完全屏蔽屏蔽",b:"瞬间断网心态波动",t:"CB"},
+        {q:"理想的射箭体验是？",a:"规则严明的场地赛",b:"随性放松的山林局",t:"MH"},
+        {q:"关于“瞄准”，你的看法是？",a:"精密瞄具追求精度",b:"手感追求用意不用力",t:"MH"},
+        {q:"你射箭的最终动力是？",a:"满环的数据成绩",b:"人弓合一的韵律",t:"MH"}
     ];
 
     const resultsData = {
-        // --- 黄色大神区 (修正后的逻辑 Key) ---
-        "TFCH":{n:"扫地僧",c:"MONK",cl:"yellow",d:"隐于市的修行者。瞄具是弱者的拐杖，你不说话，但全场都知道你是天花板。"},
-        "TFBM":{n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"拒绝工业精密，迷恋纯粹手感。这种“感觉”就是你的超能力。"},
-        "OPBM":{n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"他眼里的靶纸没有环数，只有中间那个唯一的 X。"},
-        "OPCM":{n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"只要你弓响声不对，他比你还难受。箭馆免费维修大师。"},
-        
-        // --- 蓝色理性区 ---
-        "OPCH":{n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"比起中靶，更看重开弓的精气神。古礼不能废，范儿不能掉。"},
-        "TPCM":{n:"人形卡尺",c:"10-10-10",cl:"blue",d:"追求极致精密。你不需要社交，你只需要十环。"},
-        "TPCH":{n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"最烦别人搭话，只想静静打完300支箭。你戴的是防火墙。"},
-        "OFCM":{n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"只要动作在审美线上，脱靶也要脱得优雅。"},
-        
-        // --- 紫色忧郁区 ---
-        "TFCH":{n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"拿着最难练的传统弓死磕。追求用意不用力的玄学瞬间。"}, // 修正 TTBH -> TFCH(Purple)
-        "TPBM":{n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"动作版本永远在优化，从未稳定上线。"},
-        "OPBM":{n:"悲情练习生",c:"I SHY",cl:"purple",d:"独自练习是战神，有人围观就炸坑。享受一个人的对话。"},
-        "OFCM":{n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"随手一放皆是天意。无欲则刚，反而离谱高分。"},
-        
-        // --- 绿色气氛区 ---
-        "TFCM":{n:"节奏大师",c:"SWING",cl:"green",d:"对节奏感要求极高。弦响瞬间，压力瞬间和解。"},
-        "OFBH":{n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"只要快门声够响，撒放那一刻的仪态就值回票价。"},
-        "TFBH":{n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"箭靶只是参考，广阔的草丛才是你的舞台。"},
-        "OFBM":{n:"擦边艺术家",c:"CBZ",cl:"green",d:"环线附近的钉子户，不仅射箭，还负责整活。"}
+        "TFCH": {n:"扫地僧",c:"MONK",cl:"yellow",d:"“顶级的大师，往往以最朴素的形态出现。” 隐于市的修行者。瞄具是弱者的拐杖，你从不说话，但全场都知道你是天花板。你追求的是一种玄之又玄的境界。"},
+        "TFBM": {n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"“数据会骗人，但手感永远忠诚。” 拒绝工业精密，迷恋纯粹手感。你开弓时的那种韵律感就是你的超能力。对你来说，射箭是一场关于直觉的艺术展。"},
+        "OPBM": {n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"“他不看靶，靶却在看他。” 随性是你的底色，准头是你的谜团。你眼里没有密密麻麻的环数，只有中间那个唯一的 X。射箭于你，就是一次次美丽的意外。"},
+        "OPCM": {n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"“工欲善其事，必先买买买。” 只要你弓响声不对，他比你还难受。你是箭馆移动的维修站，相比打靶，你更享受把器材调校到极致的成就感。"},
+        "OPCH": {n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"“射以观德，古礼不能废。” 比起中靶，你更看重开弓那一刻的精气神。你戴着扳指，谈着礼射，你是箭馆里行走的文化名片。"},
+        "TPCM": {n:"人形卡尺",c:"10-10-10",cl:"blue",d:"“情感只会影响我撒放的速度。” 追求极致精密。你不需要社交，你只需要十环。你的大脑里有一张永远在计算风偏和角度的精密表格。"},
+        "TPCH": {n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"“莫挨老子，我正跟我的弓进行灵魂交流。” 极度自律，最烦别人搭话。你射箭不求惊世骇俗，只求每次拉满弓时的那份汗水与肌肉记忆。你戴的是物理防火墙。"},
+        "OFCM": {n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"“中不中不重要，姿态一定要顶。” 只要动作在审美线上，脱靶也要脱得优雅。你是动作录像的常客，每一帧撒放动作都要经得起回放审查。"},
+        "TFBH": {n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"“明知山有虎，偏向虎山行。” 拿着最难练的传统弓死磕。虽然成绩还在波浪式前进，但你那股不服输的倔强劲儿，已经是满环级了。"},
+        "TPBM": {n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"“我的动作永远处于测试版。” 动作版本永远在优化，从未稳定上线。你享受分析每一箭失败原因的过程，虽然改完之后下一箭可能还是老样子。"},
+        "OPBH": {n:"悲情练习生",c:"I SHY",cl:"purple",d:"“独自练习是战神，有人围观就炸坑。” 你的准头与在场人数成反比。你享受深度对话，但人多时的眼神关注，就是你最沉重的负担。"},
+        "OFCH": {n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"“撒放那一刻，一切交给天意。” 随手一放皆是缘分。你从不纠结环数，这种无欲则刚的状态，反而让你偶尔打出令人惊叹的神迹。"},
+        "TFCM": {n:"节奏大师",c:"SWING",cl:"green",d:"“射箭就是我的灵魂蹦迪。” 对节奏感要求极高。弦响瞬间，所有的焦虑和压力都随风而去。你是箭馆里节奏感最好的那个人。"},
+        "OFBH": {n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"“箭箭不中箭箭中，快门声响万两金。” 只要快门声够响，这趟箭馆就没白来。你是箭馆的视觉担当，负责把这项古老运动拍得像电影。"},
+        "TFBH_G": {n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"“箭靶只是参考，大自然才是归宿。” 箭靶太小装不下你的梦想。你寻找箭矢的时间远多于射箭的时间，草丛里的每一棵草都认识你。"},
+        "TFBM_B": {n:"擦边艺术家",c:"CBZ",cl:"green",d:"“我不是在打靶，我是在调戏环线。” 环线附近的钉子户，箭馆的快乐担当。你不仅射箭，还负责把所有严肃的计分赛变成相声专场。"}
     };
 
     let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0}, finalCode="";
@@ -100,6 +93,9 @@
 
     function render(){
         finalCode = (s.O >= s.T ? "O" : "T") + (s.P >= s.F ? "P" : "F") + (s.C >= s.B ? "C" : "B") + (s.M >= s.H ? "M" : "H");
+        if(finalCode === "TFBH" && s.H > 2) finalCode = "TFBH_G";
+        if(finalCode === "TFBM" && s.F > 2) finalCode = "TFBM_B";
+
         const d = resultsData[finalCode] || resultsData["TPCM"];
         document.getElementById('quiz').style.display='none';
         document.getElementById('result').style.display='block';
@@ -124,11 +120,11 @@
         const img = new Image(); img.src = `${finalCode}.png`;
         img.onload = function(){
             ctx.drawImage(img, 200, 150, 400, 400);
-            ctx.fillStyle = "#333"; ctx.font = "bold 80px sans-serif"; ctx.fillText(d.n, 400, 650);
-            ctx.fillStyle = "#8d6e63"; ctx.font = "bold 60px sans-serif"; ctx.fillText(d.c, 400, 740);
-            ctx.fillStyle = "#f5f5f5"; ctx.fillRect(60, 820, 680, 240);
-            ctx.fillStyle = "#333"; ctx.font = "30px sans-serif"; ctx.textAlign = "left";
-            let words=d.d.split(''), line='', y=880;
+            ctx.fillStyle = "#333"; ctx.font = "bold 70px sans-serif"; ctx.fillText(d.n, 400, 650);
+            ctx.fillStyle = "#8d6e63"; ctx.font = "bold 50px sans-serif"; ctx.fillText(d.c, 400, 730);
+            ctx.fillStyle = "#f5f5f5"; ctx.fillRect(60, 800, 680, 320);
+            ctx.fillStyle = "#333"; ctx.font = "28px sans-serif"; ctx.textAlign = "left";
+            let words=d.d.split(''), line='', y=860;
             for(let n=0;n<words.length;n++){
                 let testLine=line+words[n];
                 if(ctx.measureText(testLine).width>600){ ctx.fillText(line,100,y); line=words[n]; y+=45; }
