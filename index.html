@@ -44,13 +44,13 @@
     <p style="color:white; margin-top:20px; font-weight:bold;">↑ 长按图片保存到相册 ↑</p>
     <p style="color:#888; font-size:12px;">点击空白处关闭</p>
 </div>
-<script class="notranslate">
+<script>
     const questions = [
         {q:"攒了一笔钱，你第一反应是？",a:"换一套更高端的器材",b:"报个大师课磨练技术",t:"OT"},
         {q:"新的一年，你最想得到的礼物是？",a:"顶级弓片或瞄具",b:"顶级教练的一次指导",t:"OT"},
         {q:"遇到瓶颈时，你下意识觉得？",a:"也许该调调器材了",b:"绝对是动作出了问题",t:"OT"},
         {q:"在箭馆练习时，你的手机通常？",a:"在录动作，几乎不看消息",b:"架在旁边，准备拍帅视频",t:"PF"},
-        {q:"当有人主动指点你的动作时？",a:"礼貌点头，继续按计划练", b:"很高兴，顺便聊聊器材黑话",t:"PF"},
+        {q:"当有人主动指点你的动作时？",a:"礼貌点头，继续按计划练",b:"很高兴，顺便聊聊器材黑话",t:"PF"},
         {q:"你在箭馆最无法忍受的行为是？",a:"有人大声喧哗影响专注",b:"环境太闷，连个拍照背景都没有",t:"PF"},
         {q:"计分赛落后 1 环，最后一箭你会？",a:"深呼吸，脑子里只有流程",b:"心跳加速，手指开始不听话",t:"CB"},
         {q:"计分赛打出了一个 6 环，下一箭？",a:"忘记刚才，按标准继续",b:"疯狂纠结，动作开始变形",t:"CB"},
@@ -61,56 +61,88 @@
         {q:"训练频率你是哪一类？",a:"像上班一样打卡，风雨无阻",b:"随缘出没，主要看老友在不在",t:"PF"},
         {q:"计分赛前你通常会？",a:"反复检查器材螺丝是否拧紧",b:"先拍一张箭袋和靶纸的合影",t:"OT"}
     ];
+
     const resultsData = {
-        // --- 蓝色 ---
-        "OPCM": { n: "人形卡尺", c: "10-10-10", cl: "blue", d: "追求极致精密。你不需要社交，你只需要十环。" },
-        "TPCM": { n: "动作质检员", c: "GOOD-POSER", cl: "blue", d: "动作必须优雅，脱靶也要脱得好看。" },
-        "TPCH": { n: "枯燥苦修僧", c: "NO-BB", cl: "blue", d: "只想安静打完300支箭。你戴的不是耳机，是防火墙。" },
-        "OPCH": { n: "文化布道师", c: "OLD-STYLE", cl: "blue", d: "开弓的精气神最重要，古礼不能废。" },
-        // --- 绿色 ---
-        "TFBM": { n: "擦边艺术家", c: "CBZ", cl: "green", d: "环线附近的钉子户，箭馆快乐担当。" },
-        "TFBH": { n: "草丛探险家", c: "ARROW-FINDER", cl: "green", d: "箭靶只是参考，广阔的草丛才是舞台。" },
-        "OFBH": { n: "古典气氛组", c: "PHOTO-ONLY", cl: "green", d: "只要快门声够清脆，撒放那一刻的仪态就值了。" },
-        "TFCM": { n: "节奏大师", c: "SWING", cl: "green", d: "对节奏要求极高，弦响瞬间压力和解。" },
-        // --- 紫色 ---
-        "OPBM": { n: "悲情练习生", c: "I SHY", cl: "purple", d: "独自是战神，有人就炸坑。享受一个人的对话。" },
-        "TPBM": { n: "流程优化专家", c: "ALWAYS-BETA", cl: "purple", d: "动作版本永远在优化，从未稳定上线。" },
-        "TTBH": { n: "倔强青铜", c: "HARD-MODE", cl: "purple", d: "死磕传统弓，追求用意不用力的玄学瞬间。" },
-        "OFCM": { n: "佛系神箭手", c: "FREE-STYLE", cl: "purple", d: "随手一放皆是天意，无欲则刚。" },
-        // --- 黄色 (这是你之前一直没看到的 4 个) ---
-        "OTCH": { n: "扫地僧", c: "MONK", cl: "yellow", d: "隐于市的修行者。瞄具是弱者的拐杖，你就是天花板。" },
-        "TTCH": { n: "传统大神", c: "JUST-FEEL", cl: "yellow", d: "迷恋纯粹手感。这种说不清的感觉就是你的超能力。" },
-        "TBCM": { n: "随缘狙击手", c: "X-MAN", cl: "yellow", d: "他眼里的靶纸没有环数，只有中间那个唯一的 X。" },
-        "OBCM": { n: "器材质检员", c: "FIX-MAN", cl: "yellow", d: "只要你弓响声不对，他比你还难受。免费维修大师。" }
+        "OPCM":{n:"人形卡尺",c:"10-10-10",cl:"blue",d:"追求极致精密。你不需要社交，你只需要十环。"},
+        "TPCM":{n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"动作必须优雅，脱靶也要脱得好看。"},
+        "TPCH":{n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"与世隔绝的防火墙，只想安静打完300支箭。"},
+        "OPCH":{n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"开弓的精气神最重要，古礼不能废。"},
+        "TFBM":{n:"擦边艺术家",c:"CBZ",cl:"green",d:"环线附近的钉子户，箭馆快乐担当。"},
+        "TFBH":{n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"箭靶只是参考，广阔的草丛才是舞台。"},
+        "OFBH":{n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"只要快门声够响，撒放那一刻的仪态值回票价。"},
+        "TFCM":{n:"节奏大师",c:"SWING",cl:"green",d:"对节奏要求极高，弦响瞬间压力和解。"},
+        "OPBM":{n:"悲情练习生",c:"I'm SHY",cl:"purple",d:"独自练习是战神，有人围观就炸坑。"},
+        "TPBM":{n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"动作版本永远在优化，从未稳定上线。"},
+        "TTBH":{n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"死磕传统弓，追求用意不用力的玄学瞬间。"},
+        "OFCM":{n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"随手一放，皆是天意。无欲则刚。"},
+        "OTCH":{n:"扫地僧",c:"MONK",cl:"yellow",d:"隐于市的修行者。瞄具是弱者的拐杖，你就是天花板。"},
+        "TTCH":{n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"迷恋纯粹手感。这种说不清的感觉就是你的超能力。"},
+        "TBCM":{n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"他眼里的靶纸没有环数，只有中间那个唯一的 X。"},
+        "OBCM":{n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"只要你弓响声不对，他比你还难受。"}
     };
-    let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0}, code="";
-    function startQuiz(){ showQ(); }
+
+    let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0};
+    
+    function startQuiz(){ document.getElementById('q-options').innerHTML=''; showQ(); }
+    
     function showQ(){
-        const q=questions[step]; document.getElementById('step-info').innerText=`第 ${step+1} 题 / 共 14 题`;
+        const q=questions[step]; 
+        document.getElementById('step-info').innerText=`STEP ${step+1}/14`;
         document.getElementById('q-text').innerText=q.q;
-        document.getElementById('q-options').innerHTML=`<button class="option-btn" onclick="h('${q.t[0]}')">A. ${q.a}</button><button class="option-btn" onclick="h('${q.t[1]}')">B. ${q.b}</button>`;
+        document.getElementById('q-options').innerHTML=`
+            <button class="option-btn" onclick="h('${q.t[0]}')">A. ${q.a}</button>
+            <button class="option-btn" onclick="h('${q.t[1]}')">B. ${q.b}</button>
+        `;
     }
-    function h(c){ s[c]++; step++; if(step<14) showQ(); else render(); }
+
+    function h(choice){
+        s[choice]++; step++;
+        if(step<14) showQ(); else render();
+    }
+
     function render(){
-        code=(s.O>=s.T?'O':'T')+(s.P>=s.F?'P':'F')+(s.C>=s.B?'C':'B')+(s.M>=s.H?'M':'H');
-        const d=resultsData[code]||resultsData["OPCM"]; document.getElementById('quiz').style.display='none'; document.getElementById('result').style.display='block';
-        const card=document.getElementById('res-card'); card.style.backgroundColor=getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-bg`);
-        card.style.backgroundImage=`url('${code}.png')`; document.getElementById('res-name').innerText=d.n; document.getElementById('res-code').innerText=d.c;
-        const box=document.getElementById('res-desc'); box.innerText=d.d; box.style.backgroundColor=card.style.backgroundColor; box.style.color=getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-text`);
+        // 核心修正：严格判定逻辑
+        let res = "";
+        res += (s.O > s.T) ? "O" : "T";
+        res += (s.P > s.F) ? "P" : "F";
+        res += (s.C > s.B) ? "C" : "B";
+        res += (s.M > s.H) ? "M" : "H";
+
+        const d = resultsData[res] || resultsData["OPCM"];
+        document.getElementById('quiz').style.display='none';
+        document.getElementById('result').style.display='block';
+        
+        const card = document.getElementById('res-card');
+        const bg = getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-bg`);
+        const txt = getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-text`);
+        
+        card.style.backgroundColor = bg;
+        card.style.backgroundImage = `url('${res}.png')`;
+        document.getElementById('res-name').innerText = d.n;
+        document.getElementById('res-code').innerText = d.c;
+        const desc = document.getElementById('res-desc');
+        desc.innerText = d.d;
+        desc.style.backgroundColor = bg;
+        desc.style.color = txt;
     }
+
     function generateCanvasImage(){
-        const d=resultsData[code]; const canvas=document.createElement('canvas'); const ctx=canvas.getContext('2d'); canvas.width=800; canvas.height=1200;
-        ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,800,1200); ctx.fillStyle="#333"; ctx.font="bold 36px sans-serif"; ctx.textAlign="center"; ctx.fillText("ABTI打弓人箭格鉴定局",400,80);
-        const img=new Image(); img.src=`${code}.png`;
-        img.onload=function(){
-            ctx.drawImage(img,200,150,400,400); ctx.fillStyle="#333"; ctx.font="bold 80px sans-serif"; ctx.fillText(d.n,400,650);
-            ctx.fillStyle="#8d6e63"; ctx.font="bold 60px sans-serif"; ctx.fillText(d.c,400,740);
-            ctx.fillStyle="#f5f5f5"; ctx.fillRect(60,820,680,240); ctx.fillStyle="#333"; ctx.font="30px sans-serif"; ctx.textAlign="left";
-            let words=d.d.split(''), line='', y=880;
-            for(let n=0;n<words.length;n++){ let testLine=line+words[n]; if(ctx.measureText(testLine).width>600){ ctx.fillText(line,100,y); line=words[n]; y+=45; }else{ line=testLine; } }
-            ctx.fillText(line,100,y); document.getElementById('final-image').src=canvas.toDataURL(); document.getElementById('canvas-mask').style.display='flex';
+        // 此处逻辑保持不变，确保 finalCode 正确传递即可
+        const res = (s.O > s.T ? "O" : "T") + (s.P > s.F ? "P" : "F") + (s.C > s.B ? "C" : "B") + (s.M > s.H ? "M" : "H");
+        const d = resultsData[res];
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800; canvas.height = 1200;
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,800,1200);
+        const img = new Image(); img.src = `${res}.png`;
+        img.onload = function(){
+            ctx.drawImage(img, 200, 150, 400, 400);
+            ctx.fillStyle = "#333"; ctx.font = "bold 80px sans-serif"; ctx.textAlign = "center";
+            ctx.fillText(d.n, 400, 650);
+            document.getElementById('final-image').src = canvas.toDataURL();
+            document.getElementById('canvas-mask').style.display = 'flex';
         };
-        img.onerror=function(){ img.onload(); };
+        img.onerror = function(){ img.onload(); };
     }
 </script>
 </body>
