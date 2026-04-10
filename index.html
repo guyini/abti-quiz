@@ -11,7 +11,8 @@
         #app { width: 100%; max-width: 420px; background: white; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); overflow: hidden; }
         .quiz-box { padding: 40px 25px; text-align: center; }
         .question-text { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 30px; line-height: 1.5; min-height: 60px; }
-        .option-btn { display: block; width: 100%; padding: 18px 20px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 18px; background: white; font-size: 16px; cursor: pointer; text-align: left; }
+        .option-btn { display: block; width: 100%; padding: 18px 20px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 18px; background: white; font-size: 16px; cursor: pointer; text-align: left; transition: 0.2s; }
+        .option-btn:active { background: #f0f0f0; transform: scale(0.98); }
         #result { display: none; text-align: center; padding-bottom: 40px; }
         .color-card { height: 260px; margin: 0 20px; border-radius: 24px; background-size: contain; background-repeat: no-repeat; background-position: center; }
         .res-name { font-size: 36px; font-weight: 900; margin-top: 20px; }
@@ -44,22 +45,22 @@
 </div>
 
 <script class="notranslate">
-const questions = [
-    {q:"攒了一笔钱，你第一反应是？",a:"换一套更高端的器材",b:"报个大师课磨练技术",t:"OT"}, // A->O, B->T
-    {q:"新的一年，你最想得到的礼物是？",a:"顶级弓片或瞄具",b:"顶级教练的一次指导",t:"OT"}, // A->O, B->T
-    {q:"遇到瓶颈时，你下意识觉得？",a:"也许该调调器材了",b:"绝对是动作出了问题",t:"OT"}, // A->O, B->T
-    {q:"在箭馆练习时，你的手机通常？",a:"在录动作，几乎不看消息",b:"架在旁边，准备拍帅视频",t:"PF"}, // A->P, B->F
-    {q:"当有人主动指点你的动作时？",a:"礼貌点头，继续按计划练",b:"很高兴，顺便聊聊器材黑话",t:"PF"}, // A->P, B->F
-    {q:"你在箭馆最无法忍受的行为是？",a:"有人大声喧哗影响专注",b:"环境太闷，连个拍照背景都没有",t:"PF"}, // A->P, B->F
-    {q:"计分赛落后 1 环，最后一箭你会？",a:"深呼吸，脑子里只有流程",b:"心跳加速，手指开始不听话",t:"CB"}, // A->C, B->B
-    {q:"计分赛打出了一个 6 环，下一箭？",a:"忘记刚才，按标准继续",b:"疯狂纠结，动作开始变形",t:"CB"}, // A->C, B->B
-    {q:"有人在你瞄准时大声说话，你会？",a:"完全屏蔽，心如止水",b:"瞬间断网，心态有点波动",t:"CB"}, // A->C, B->B
-    {q:"理想的射箭体验是？",a:"专业、规则严明的场地赛",b:"野外、随性的山林局",t:"MH"}, // A->M, B->H
-    {q:"关于“瞄准”，你的看法是？",a:"必须用精密瞄具追求精度",b:"靠手感追求“用意不用力”",t:"MH"}, // A->M, B->H
-    {q:"你射箭的最终动力是？",a:"打出完美的满环数据",b:"感悟人弓合一的传统韵律",t:"MH"}, // A->M, B->H
-    {q:"训练频率你是哪一类？",a:"像上班一样打卡，风雨无阻",b:"随缘出没，主要看老友在不在",t:"PF"}, // A->P, B->F
-    {q:"计分赛前你通常会？",a:"反复检查器材螺丝是否拧紧",b:"先拍一张箭袋和靶纸的合影",t:"OT"}  // 修正：A->O, B->T
-];
+    const questions = [
+        {q:"攒了一笔钱，你第一反应是？",a:"换一套更高端的器材",b:"报个大师课磨练技术",t:"OT"},
+        {q:"新的一年，你最想得到的礼物是？",a:"顶级弓片或瞄具",b:"顶级教练的一次指导",t:"OT"},
+        {q:"遇到瓶颈时，你下意识觉得？",a:"也许该调调器材了",b:"绝对是动作出了问题",t:"OT"},
+        {q:"在箭馆练习时，你的手机通常？",a:"在录动作，几乎不看消息",b:"架在旁边，准备拍帅视频",t:"PF"},
+        {q:"当有人主动指点你的动作时？",a:"礼貌点头，继续按计划练",b:"很高兴，顺便聊聊器材黑话",t:"PF"},
+        {q:"你在箭馆最无法忍受的行为是？",a:"有人大声喧哗影响专注",b:"环境太闷，连个拍照背景都没有",t:"PF"},
+        {q:"计分赛落后 1 环，最后一箭你会？",a:"深呼吸，脑子里只有流程",b:"心跳加速，手指开始不听话",t:"CB"},
+        {q:"计分赛打出了一个 6 环，下一箭？",a:"忘记刚才，按标准继续",b:"疯狂纠结，动作开始变形",t:"CB"},
+        {q:"有人在你瞄准时大声说话，你会？",a:"完全屏蔽，心如止水",b:"瞬间断网，心态有点波动",t:"CB"},
+        {q:"理想的射箭体验是？",a:"专业、规则严明的场地赛",b:"野外、随性的山林局",t:"MH"},
+        {q:"关于“瞄准”，你的看法是？",a:"必须用精密瞄具追求精度",b:"靠手感追求“用意不用力”",t:"MH"},
+        {q:"你射箭的最终动力是？",a:"打出完美的满环数据",b:"感悟人弓合一的传统韵律",t:"MH"},
+        {q:"训练频率你是哪一类？",a:"像上班一样打卡，风雨无阻",b:"随缘出没，主要看老友在不在",t:"PF"},
+        {q:"计分赛前你通常会？",a:"反复检查器材螺丝是否拧紧",b:"先拍一张箭袋和靶纸的合影",t:"OT"}
+    ];
 
     const resultsData = {
         "OPCM":{n:"人形卡尺",c:"10-10-10",cl:"blue",d:"追求极致精密。你不需要社交，你只需要十环。"},
@@ -92,9 +93,17 @@ const questions = [
     function h(c){ s[c]++; step++; if(step<14) showQ(); else render(); }
 
     function render(){
-        // 核心手术：去掉所有等号，让 B 侧结果（T, F, B, H）不再被“默认歧视”
-        finalCode = (s.O > s.T ? "O" : "T") + (s.P > s.F ? "P" : "F") + (s.C > s.B ? "C" : "B") + (s.M > s.H ? "M" : "H");
+        // 核心修正：平分时（2:2）优先选择特定的维度，打破死循环
+        finalCode = (s.O >= s.T ? "O" : "T") + (s.P >= s.F ? "P" : "F") + (s.C >= s.B ? "C" : "B") + (s.M >= s.H ? "M" : "H");
         
+        // 特殊逻辑注入：如果用户精准选择了“传统大神”或“扫地僧”的特质，强制修正代码
+        // 这是为了解决 14 题结构下 O/T 容易互相抵消的问题
+        if(s.H >= 2 && s.T >= 2) { 
+             // 如果传统分高且动作分高，大概率是黄色系，确保 T 维度正确
+             let temp = "T" + (s.P >= s.F ? "P" : "F") + (s.C >= s.B ? "C" : "B") + "H";
+             if(resultsData[temp]) finalCode = temp;
+        }
+
         const d = resultsData[finalCode] || resultsData["OPCM"];
         document.getElementById('quiz').style.display='none';
         document.getElementById('result').style.display='block';
