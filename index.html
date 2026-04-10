@@ -25,7 +25,7 @@
 <div id="app" class="notranslate">
     <div id="quiz" class="quiz-box">
         <div id="step-info" style="color:#bbb; font-size:13px; margin-bottom:10px;">READY</div>
-        <div id="q-text" class="question-text">ABTI 打弓人箭格鉴定局</div>
+        <div id="q-text" class="question-text">《除了黄区，你哪儿都能中》<br>ABTI 打弓人箭格鉴定局</div>
         <div id="q-options"><button class="option-btn" style="text-align:center;" onclick="startQuiz()">进入鉴定局</button></div>
     </div>
     <div id="result">
@@ -63,24 +63,24 @@
 
     const resultsData = {
         "OPCM":{n:"人形卡尺",c:"10-10-10",cl:"blue",d:"追求极致精密。你不需要社交，你只需要十环。"},
-        "TPCM":{n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"只要动作在审美线上，中不中黄区你都能原谅。"},
+        "TPCM":{n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"只要动作在审美线上，脱靶也要脱得优雅。"},
         "TPCH":{n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"只想安静打完300支箭。你戴的不是耳机，是防火墙。"},
         "OPCH":{n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"比起中靶，更看重开弓的精气神。古礼不能废。"},
         "TFBM":{n:"擦边艺术家",c:"CBZ",cl:"green",d:"环线附近的钉子户，不仅射箭，还负责整活。"},
         "TFBH":{n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"箭靶只是参考，广阔的草丛才是你的舞台。"},
         "OFBH":{n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"把箭馆变成国风发布会。只要快门声够响就值了。"},
         "TFCM":{n:"节奏大师",c:"SWING",cl:"green",d:"对节奏感要求极高。弦响瞬间，压力瞬间和解。"},
-        "OPBM":{n:"悲情练习生",c:"I'm SHY",cl:"purple",d:"独自练习是战神，有人围观就炸坑。享受深度对话。"},
-        "TPBM":{n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"动作永远在改，从未稳定上线。你是动作内测员。"},
+        "OPBM":{n:"悲情练习生",c:"I'm SHY",cl:"purple",d:"独自练习是战神，有人围观就炸坑。"},
+        "TPBM":{n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"动作版本永远在优化，从未稳定上线。"},
         "TTBH":{n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"拿着最难练的传统弓死磕。追求用意不用力的瞬间。"},
-        "OFCM":{n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"随手一放皆是天意。无欲则刚，反而离谱高分。"},
+        "OFCM":{n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"随手一放皆是天意。无欲则刚，反而高分。"},
         "OTCH":{n:"扫地僧",c:"MONK",cl:"yellow",d:"隐于市的修行者。瞄具是弱者的拐杖，你就是天花板。"},
         "TTCH":{n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"拒绝工业精密，迷恋纯粹手感。手感就是超能力。"},
-        "TBCM":{n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"他说他瞎射的。他眼里没有环数，只有中间那个 X。"},
-        "OBCM":{n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"只要你弓响声不对，他比你还难受。免费维修大师。"}
+        "TBCM":{n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"他说他瞎射的。他眼里没有环数，只有中间的 X。"},
+        "OBCM":{n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"只要你弓响声不对，他比你还难受。"}
     };
 
-    let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0}, finalRes="";
+    let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0}, finalCode="";
 
     function startQuiz(){ showQ(); }
     function showQ(){
@@ -92,13 +92,15 @@
     function h(c){ s[c]++; step++; if(step<14) showQ(); else render(); }
 
     function render(){
-        finalRes = (s.O >= s.T ? "O" : "T") + (s.P >= s.F ? "P" : "F") + (s.C >= s.B ? "C" : "B") + (s.M >= s.H ? "M" : "H");
-        const d = resultsData[finalRes] || resultsData["OPCM"];
+        // 核心手术：去掉所有等号，让 B 侧结果（T, F, B, H）不再被“默认歧视”
+        finalCode = (s.O > s.T ? "O" : "T") + (s.P > s.F ? "P" : "F") + (s.C > s.B ? "C" : "B") + (s.M > s.H ? "M" : "H");
+        
+        const d = resultsData[finalCode] || resultsData["OPCM"];
         document.getElementById('quiz').style.display='none';
         document.getElementById('result').style.display='block';
         const card = document.getElementById('res-card');
         card.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-bg`);
-        card.style.backgroundImage = `url('${finalRes}.png')`;
+        card.style.backgroundImage = `url('${finalCode}.png')`;
         document.getElementById('res-name').innerText = d.n;
         document.getElementById('res-code').innerText = d.c;
         const box = document.getElementById('res-desc');
@@ -108,13 +110,13 @@
     }
 
     function generateCanvasImage(){
-        const d = resultsData[finalRes];
+        const d = resultsData[finalCode];
         const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
         canvas.width = 800; canvas.height = 1200;
         ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,800,1200);
         ctx.fillStyle = "#333"; ctx.font = "bold 36px sans-serif"; ctx.textAlign = "center";
         ctx.fillText("ABTI打弓人箭格鉴定局", 400, 80);
-        const img = new Image(); img.src = `${finalRes}.png`;
+        const img = new Image(); img.src = `${finalCode}.png`;
         img.onload = function(){
             ctx.drawImage(img, 200, 150, 400, 400);
             ctx.fillStyle = "#333"; ctx.font = "bold 80px sans-serif"; ctx.fillText(d.n, 400, 650);
