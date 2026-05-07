@@ -2,7 +2,6 @@
 <html lang="zh-CN" translate="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABTI 箭格鉴定局</title>
     <style>
@@ -20,20 +19,22 @@
         .action-btn { display: block; width: 85%; margin: 25px auto 0; padding: 16px; border-radius: 15px; background: #333; color: white; font-weight: bold; border: none; cursor: pointer; }
         #canvas-mask { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; flex-direction:column; }
         .footer-info { font-size: 12px; color: #bbb; margin-top: 20px; text-align: center; }
+        .stat-line { font-size: 13px; color: #ff4757; margin-bottom: 10px; font-weight: bold; }
     </style>
 </head>
 <body class="notranslate">
-<div id="app" class="notranslate">
+<div id="app">
     <div id="quiz" class="quiz-box">
         <div id="step-info" style="color:#bbb; font-size:13px; margin-bottom:10px;">READY</div>
-        <div id="q-text" class="question-text">《除了黄区，你哪儿都能中》<br>ABTI 打弓人箭格鉴定局</div>
+        <div id="q-text" class="question-text">ABTI 打弓人箭格鉴定局</div>
         <div id="q-options"><button class="option-btn" style="text-align:center;" onclick="startQuiz()">进入鉴定局</button></div>
     </div>
     <div id="result">
-        <div style="padding:20px; color:#666; font-weight:bold;">你的箭格类型是：</div>
+        <div style="padding:20px; color:#666; font-weight:bold;">鉴定结果：</div>
         <div id="res-card" class="color-card"></div>
         <div class="res-name" id="res-name"></div>
         <div class="res-code" id="res-code"></div>
+        <div id="res-stat" class="stat-line"></div>
         <div id="res-desc" class="res-desc-box"></div>
         <button class="action-btn" onclick="generateCanvasImage()">保存我的箭格卡片</button>
         <div class="footer-info">长沙百杨顾顾 wechat:gyndwxh</div>
@@ -41,91 +42,81 @@
     </div>
 </div>
 <div id="canvas-mask" onclick="this.style.display='none'">
-    <img id="final-image" style="max-width:85%; border-radius:15px; box-shadow:0 0 20px rgba(0,0,0,0.5);">
-    <p style="color:white; margin-top:20px; font-weight:bold;">↑ 长按图片保存到相册 ↑</p>
+    <img id="final-image" style="max-width:85%; border-radius:15px;">
+    <p style="color:white; margin-top:20px;">↑ 长按图片保存 ↑</p>
 </div>
 
-<script class="notranslate">
+<script>
     const questions = [
         {q:"攒了一笔钱，你第一反应是？",a:"换一套更高端的器材",b:"报个大师课磨练技术",t:"OT"},
         {q:"新的一年，你最想得到的礼物是？",a:"顶级弓片或瞄具",b:"顶级教练的一次指导",t:"OT"},
         {q:"遇到瓶颈时，你下意识觉得？",a:"也许该调调器材了",b:"绝对是动作出了问题",t:"OT"},
         {q:"计分赛前你通常会？",a:"检查器材螺丝",b:"复盘动作流程",t:"OT"},
-        {q:"练习射箭时，你的手机通常？",a:"录动作，不看消息",b:"拍视频，准备发朋友圈",t:"PF"},
-        {q:"当有人主动指点你的动作时？",a:"礼貌点头继续练",b:"很高兴顺便聊器材",t:"PF"},
-        {q:"你在箭馆最无法忍受的是？",a:"有人吵闹影响专注",b:"环境太闷没法拍照",t:"PF"},
-        {q:"你的训练频率更接近？",a:"打卡准时像上班",b:"随缘出没看心情",t:"PF"},
-        {q:"计分赛落后 1 环，最后一箭？",a:"脑子里只有流程",b:"心跳加速手发抖",t:"CB"},
-        {q:"计分赛打了个 6 环，下一箭？",a:"忘记刚才按标准来",b:"纠结心态动作变形",t:"CB"},
-        {q:"有人在瞄准时说话，你会？",a:"完全屏蔽屏蔽",b:"瞬间断网心态波动",t:"CB"},
-        {q:"理想的射箭体验是？",a:"规则严明的场地赛",b:"随性放松的山林局",t:"MH"},
-        {q:"关于“瞄准”，你的看法是？",a:"精密瞄具追求精度",b:"手感追求用意不用力",t:"MH"},
-        {q:"你射箭的最终动力是？",a:"满环的数据成绩",b:"人弓合一的韵律",t:"MH"}
+        {q:"练习射箭时，手机通常？",a:"录动作不看消息",b:"拍视频准备发朋友圈",t:"PF"},
+        {q:"有人指点你动作时？",a:"礼貌点头继续练",b:"很高兴顺便聊器材",t:"PF"},
+        {q:"你在箭馆最无法忍受？",a:"有人吵闹影响专注",b:"环境太闷没法拍照",t:"PF"},
+        {q:"你的训练频率？",a:"打卡准时像上班",b:"随缘出没看心情",t:"PF"},
+        {q:"计分赛落后1环？",a:"脑子里只有流程",b:"心跳加速手发抖",t:"CB"},
+        {q:"打了个 6 环？",a:"忘记刚才按标准来",b:"纠结心态动作变形",t:"CB"},
+        {q:"有人瞄准时说话？",a:"完全屏蔽",b:"心态波动",t:"CB"},
+        {q:"理想体验？",a:"规则严明的场地赛",b:"随性放松的山林局",t:"MH"},
+        {q:"关于瞄准？",a:"精密瞄具追求精度",b:"手感追求用意不用力",t:"MH"},
+        {q:"最终动力？",a:"满环的数据成绩",b:"人弓合一的韵律",t:"MH"}
     ];
 
     const resultsData = {
-        "TFCH": {n:"扫地僧",c:"MONK",cl:"yellow",d:"<b>“顶级的大师，往往以最朴素的形态出现。”</b>\n隐于市的修行者。瞄具是弱者的拐杖，你从不说话，但全场都知道你是天花板。"},
-        "TFBM": {n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"<b>“数据会骗人，但手感永远忠诚。”</b>\n拒绝工业精密，迷恋纯粹手感。你开弓时的那种韵律感就是你的超能力。"},
-        "OPBM": {n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"<b>“他不看靶，靶却在看他。”</b>\n随性是你的底色，准头是你的谜团。你眼里没有环数，只有中间那个唯一的 X。"},
-        "OPCM": {n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"<b>“工欲善其事，必先买买买。”</b>\n只要你弓响声不对，他比你还难受。你是箭馆移动的维修站。"},
-        "OPCH": {n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"<b>“射以观德，古礼不能废。”</b>\n比起中靶，更看重开弓那一刻的精气神。古礼不能废，范儿不能掉。"},
-        "TPCM": {n:"人形卡尺",c:"10-10-10",cl:"blue",d:"<b>“情感只会影响我撒放的速度。”</b>\n追求极致精密。你不需要社交，你只需要十环。"},
-        "TPCH": {n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"<b>“莫挨老子，我正跟我的弓进行灵魂交流。”</b>\n极度自律，最烦别人搭话。你射箭只求肌肉记忆。"},
-        "OFCM": {n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"<b>“中不中不重要，姿态一定要顶。”</b>\n只要动作在审美线上，脱靶也要脱得优雅。"},
-        "TFBH": {n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"<b>“明知山有虎，偏向虎山行。”</b>\n拿着最难练的传统弓死磕。虽然成绩波动，但你那股不服输的劲儿是满环级的。"},
-        "TPBM": {n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"<b>“我的动作永远处于测试版。”</b>\n动作版本永远在优化，从未稳定上线。"},
-        "OPBH": {n:"悲情练习生",c:"I SHY",cl:"purple",d:"<b>“独自练习是战神，有人围观就炸坑。”</b>\n你的准头与在场人数成反比。"},
-        "OFCH": {n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"<b>“撒放那一刻，一切交给天意。”</b>\n随手一放皆是缘分。"},
-        "TFCM": {n:"节奏大师",c:"SWING",cl:"green",d:"<b>“射箭就是我的灵魂蹦迪。”</b>\n对节奏感要求极高。弦响瞬间，所有的焦虑和压力都随风而去。"},
-        "OFBH": {n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"<b>“箭箭不中箭箭中，快门声响万两金。”</b>\n只要快门声够响，这趟箭馆就没白来。"},
-        "TFBH_G": {n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"<b>“箭靶只是参考，大自然才是归宿。”</b>\n寻找箭矢的时间远多于射箭的时间，草丛里的每一棵草都认识你。"},
-        "TFBM_B": {n:"擦边艺术家",c:"CBZ",cl:"green",d:"<b>“我不是在打靶，我是在调戏环线。”</b>\n环线附近的钉子户，不仅射箭，还负责整活。"}
+        "TFCH": {n:"扫地僧",c:"MONK",cl:"yellow",r:"1.2%",d:"<b>“顶级的大师，往往以最朴素的形态出现。”</b>\n隐于市的修行者。瞄具是弱者的拐杖，你从不说话，但全场都知道你是天花板。"},
+        "TFBM": {n:"传统大神",c:"JUST-FEEL",cl:"yellow",r:"2.5%",d:"<b>“数据会骗人，但手感永远忠诚。”</b>\n拒绝工业精密，迷恋纯粹手感。你开弓时的那种韵律感就是你的超能力。"},
+        "OPBM": {n:"随缘狙击手",c:"X-MAN",cl:"yellow",r:"3.1%",d:"<b>“他不看靶，靶却在看他。”</b>\n随性是你的底色，准头是你的谜团。"},
+        "OPCM": {n:"器材质检员",c:"FIX-MAN",cl:"yellow",r:"4.8%",d:"<b>“工欲善其事，必先买买买。”</b>\n你是箭馆移动的维修站，相比打靶，你更享受调校器材。"},
+        "OPCH": {n:"文化布道师",c:"OLD-STYLE",cl:"blue",r:"6.2%",d:"<b>“射以观德，古礼不能废。”</b>\n比起中靶，更看重开弓那一刻的精气神。"},
+        "TPCM": {n:"人形卡尺",c:"10-10-10",cl:"blue",r:"15.4%",d:"<b>“情感只会影响我撒放的速度。”</b>\n追求极致精密。你不需要社交，你只需要十环。"},
+        "TPCH": {n:"枯燥苦修僧",c:"NO-BB",cl:"blue",r:"8.7%",d:"<b>“莫挨老子，我正跟我的弓进行灵魂交流。”</b>\n极度自律，最烦别人搭话。"},
+        "OFCM": {n:"动作质检员",c:"GOOD-POSER",cl:"blue",r:"12.1%",d:"<b>“中不中不重要，姿态一定要顶。”</b>\n姿态优美是你的最后底线。"},
+        "TFBH": {n:"倔强青铜",c:"HARD-MODE",cl:"purple",r:"18.2%",d:"<b>“明知山有虎，偏向虎山行。”</b>\n拿着最难练的传统弓死磕。"},
+        "TPBM": {n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",r:"11.5%",d:"<b>“我的动作永远处于测试版。”</b>\n动作版本永远在优化，从未稳定上线。"},
+        "OPBH": {n:"悲情练习生",c:"I SHY",cl:"purple",r:"9.3%",d:"<b>“独自练习是战神，有人围观就炸坑。”</b>\n社交关注是你最沉重的负担。"},
+        "OFCH": {n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",r:"14.8%",d:"<b>“撒放那一刻，一切交给天意。”</b>\n随手一放皆是缘分。"},
+        "TFCM": {n:"节奏大师",c:"SWING",cl:"green",r:"7.5%",d:"<b>“射箭就是我的灵魂蹦迪。”</b>\n弦响瞬间，所有的焦虑和压力都随风而去。"},
+        "OFBH": {n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",r:"10.6%",d:"<b>“箭箭不中箭箭中，快门声响万两金。”</b>\n你是负责把射箭拍成电影的人。"},
+        "TFBH_G": {n:"草丛探险家",c:"ARROW-FINDER",cl:"green",r:"5.3%",d:"<b>“箭靶只是参考，大自然才是归宿。”</b>\n寻找箭矢的时间远多于射箭的时间。"},
+        "TFBM_B": {n:"擦边艺术家",c:"CBZ",cl:"green",r:"9.1%",d:"<b>“我不是在打靶，我是在调戏环线。”</b>\n箭馆的快乐担当。"}
     };
 
     let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0}, finalCode="";
 
     function startQuiz(){ showQ(); }
     function showQ(){
-        const q=questions[step]; document.getElementById('step-info').innerText=`第 ${step+1} 题 / 共 14 题`;
+        const q=questions[step]; document.getElementById('step-info').innerText=`第 ${step+1} / 14 题`;
         document.getElementById('q-text').innerText=q.q;
         document.getElementById('q-options').innerHTML=`<button class="option-btn" onclick="h('${q.t[0]}')">A. ${q.a}</button><button class="option-btn" onclick="h('${q.t[1]}')">B. ${q.b}</button>`;
     }
-
     function h(c){ s[c]++; step++; if(step<14) showQ(); else render(); }
 
     function render(){
-        // 基础逻辑计算
         let resO = s.O >= s.T ? "O" : "T";
         let resP = s.P >= s.F ? "P" : "F";
         let resC = s.C >= s.B ? "C" : "B";
         let resM = s.M >= s.H ? "M" : "H";
         finalCode = resO + resP + resC + resM;
-        
-        // --- 强制修正逻辑（确保老大难出列） ---
-        
-        // 1. 如果是全 B 路径且 M 维度稍微有点分 -> 倔强青铜
-        if(s.T >= 2 && s.F >= 2 && s.B >= 2 && s.M >= 1) {
-            finalCode = "TFBH";
-        }
-        // 2. 如果是全 B 路径且 M 维度完全没分 -> 草丛探险家
-        else if(s.T >= 2 && s.F >= 2 && s.B >= 2 && s.M === 0) {
-            finalCode = "TFBH_G";
-        }
-        // 3. 擦边艺术家的修正
+        if(s.T >= 2 && s.F >= 2 && s.B >= 2 && s.M >= 1) finalCode = "TFBH";
+        else if(s.T >= 2 && s.F >= 2 && s.B >= 2 && s.M === 0) finalCode = "TFBH_G";
         if(finalCode === "TFBM" && s.F >= 2) finalCode = "TFBM_B";
 
         const d = resultsData[finalCode] || resultsData["TPCM"];
+        
+        // 动态模拟序号
+        const userCount = Math.floor(Date.now() / 1000000) - 1714000;
+        const statText = `你是第 ${userCount > 0 ? userCount : 1248} 位参与鉴定的箭友，全服占比仅 ${d.r}`;
+
         document.getElementById('quiz').style.display='none';
         document.getElementById('result').style.display='block';
-        const card = document.getElementById('res-card');
-        card.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-bg`);
-        card.style.backgroundImage = `url('${finalCode}.png')`;
+        document.getElementById('res-card').style.backgroundImage = `url('${finalCode}.png')`;
+        document.getElementById('res-card').style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-bg`);
         document.getElementById('res-name').innerText = d.n;
         document.getElementById('res-code').innerText = d.c;
-        const box = document.getElementById('res-desc');
-        box.innerHTML = d.d.replace(/\n/g, '<br>');
-        box.style.backgroundColor = card.style.backgroundColor;
-        box.style.color = getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-text`);
+        document.getElementById('res-stat').innerText = statText;
+        document.getElementById('res-desc').innerHTML = d.d.replace(/\n/g, '<br>');
     }
 
     function generateCanvasImage(){
@@ -135,29 +126,26 @@
         ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,800,1260);
         ctx.fillStyle = "#333"; ctx.font = "bold 36px sans-serif"; ctx.textAlign = "center";
         ctx.fillText("ABTI打弓人箭格鉴定局", 400, 80);
+        
         const img = new Image(); img.src = `${finalCode}.png`;
         img.onload = function(){
             ctx.drawImage(img, 200, 150, 400, 400);
             ctx.fillStyle = "#333"; ctx.font = "bold 70px sans-serif"; ctx.fillText(d.n, 400, 650);
-            ctx.fillStyle = "#8d6e63"; ctx.font = "bold 50px sans-serif"; ctx.fillText(d.c, 400, 730);
-            ctx.fillStyle = "#f5f5f5"; ctx.fillRect(60, 800, 680, 320);
-            ctx.textAlign = "left";
+            ctx.fillStyle = "#8d6e63"; ctx.font = "bold 50px sans-serif"; ctx.fillText(d.c, 400, 720);
+            
+            // Canvas 中绘制红色占比
+            ctx.fillStyle = "#ff4757"; ctx.font = "bold 30px sans-serif";
+            ctx.fillText(`全服仅有 ${d.r} 的人拥有此箭格`, 400, 780);
+
+            ctx.fillStyle = "#f5f5f5"; ctx.fillRect(60, 820, 680, 310);
+            ctx.textAlign = "left"; ctx.fillStyle = "#333";
             const lines = d.d.split('\n');
-            let y = 860;
+            let y = 880;
             lines.forEach((line, index) => {
-                if(index === 0) { ctx.font = "bold 30px sans-serif"; ctx.fillStyle = "#000"; }
-                else { ctx.font = "26px sans-serif"; ctx.fillStyle = "#333"; }
-                let words = line.replace(/<b>|<\/b>/g, '').split('');
-                let currentLine = '';
-                for(let n=0; n<words.length; n++){
-                    let testLine = currentLine + words[n];
-                    if(ctx.measureText(testLine).width > 600){
-                        ctx.fillText(currentLine, 100, y);
-                        currentLine = words[n]; y += 45;
-                    } else { currentLine = testLine; }
-                }
-                ctx.fillText(currentLine, 100, y); y += 50;
+                ctx.font = index === 0 ? "bold 28px sans-serif" : "24px sans-serif";
+                ctx.fillText(line.replace(/<b>|<\/b>/g, ''), 100, y); y += 50;
             });
+            
             ctx.textAlign = "center"; ctx.fillStyle = "#bbb"; ctx.font = "22px sans-serif";
             ctx.fillText("长沙百杨顾顾 wechat:gyndwxh", 400, 1200);
             document.getElementById('final-image').src = canvas.toDataURL();
