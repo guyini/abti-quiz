@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABTI 箭格鉴定局</title>
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e42813dec8d2408a8c37c83924260f84"}'></script>
     <style>
         :root { --blue-bg: #e3f2fd; --blue-text: #1976d2; --green-bg: #e8f5e9; --green-text: #2e7d32; --purple-bg: #f3e5f5; --purple-text: #7b1fa2; --yellow-bg: #fffde7; --yellow-text: #8d6e63; }
         body { font-family: sans-serif; background: #f5f5f5; margin: 0; display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
@@ -19,10 +20,9 @@
         .action-btn { display: block; width: 85%; margin: 25px auto 0; padding: 16px; border-radius: 15px; background: #333; color: white; font-weight: bold; border: none; cursor: pointer; }
         #canvas-mask { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; flex-direction:column; }
         .footer-info { font-size: 12px; color: #bbb; margin-top: 20px; text-align: center; }
-        .stat-line { font-size: 13px; color: #ff4757; margin-bottom: 10px; font-weight: bold; }
     </style>
 </head>
-<body class="notranslate">
+<body>
 <div id="app">
     <div id="quiz" class="quiz-box">
         <div id="step-info" style="color:#bbb; font-size:13px; margin-bottom:10px;">READY</div>
@@ -34,7 +34,6 @@
         <div id="res-card" class="color-card"></div>
         <div class="res-name" id="res-name"></div>
         <div class="res-code" id="res-code"></div>
-        <div id="res-stat" class="stat-line"></div>
         <div id="res-desc" class="res-desc-box"></div>
         <button class="action-btn" onclick="generateCanvasImage()">保存我的箭格卡片</button>
         <div class="footer-info">长沙百杨顾顾 wechat:gyndwxh</div>
@@ -65,22 +64,22 @@
     ];
 
     const resultsData = {
-        "TFCH": {n:"扫地僧",c:"MONK",cl:"yellow",r:"1.2%",d:"<b>“顶级的大师，往往以最朴素的形态出现。”</b>\n隐于市的修行者。瞄具是弱者的拐杖，你从不说话，但全场都知道你是天花板。"},
-        "TFBM": {n:"传统大神",c:"JUST-FEEL",cl:"yellow",r:"2.5%",d:"<b>“数据会骗人，但手感永远忠诚。”</b>\n拒绝工业精密，迷恋纯粹手感。你开弓时的那种韵律感就是你的超能力。"},
-        "OPBM": {n:"随缘狙击手",c:"X-MAN",cl:"yellow",r:"3.1%",d:"<b>“他不看靶，靶却在看他。”</b>\n随性是你的底色，准头是你的谜团。"},
-        "OPCM": {n:"器材质检员",c:"FIX-MAN",cl:"yellow",r:"4.8%",d:"<b>“工欲善其事，必先买买买。”</b>\n你是箭馆移动的维修站，相比打靶，你更享受调校器材。"},
-        "OPCH": {n:"文化布道师",c:"OLD-STYLE",cl:"blue",r:"6.2%",d:"<b>“射以观德，古礼不能废。”</b>\n比起中靶，更看重开弓那一刻的精气神。"},
-        "TPCM": {n:"人形卡尺",c:"10-10-10",cl:"blue",r:"15.4%",d:"<b>“情感只会影响我撒放的速度。”</b>\n追求极致精密。你不需要社交，你只需要十环。"},
-        "TPCH": {n:"枯燥苦修僧",c:"NO-BB",cl:"blue",r:"8.7%",d:"<b>“莫挨老子，我正跟我的弓进行灵魂交流。”</b>\n极度自律，最烦别人搭话。"},
-        "OFCM": {n:"动作质检员",c:"GOOD-POSER",cl:"blue",r:"12.1%",d:"<b>“中不中不重要，姿态一定要顶。”</b>\n姿态优美是你的最后底线。"},
-        "TFBH": {n:"倔强青铜",c:"HARD-MODE",cl:"purple",r:"18.2%",d:"<b>“明知山有虎，偏向虎山行。”</b>\n拿着最难练的传统弓死磕。"},
-        "TPBM": {n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",r:"11.5%",d:"<b>“我的动作永远处于测试版。”</b>\n动作版本永远在优化，从未稳定上线。"},
-        "OPBH": {n:"悲情练习生",c:"I SHY",cl:"purple",r:"9.3%",d:"<b>“独自练习是战神，有人围观就炸坑。”</b>\n社交关注是你最沉重的负担。"},
-        "OFCH": {n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",r:"14.8%",d:"<b>“撒放那一刻，一切交给天意。”</b>\n随手一放皆是缘分。"},
-        "TFCM": {n:"节奏大师",c:"SWING",cl:"green",r:"7.5%",d:"<b>“射箭就是我的灵魂蹦迪。”</b>\n弦响瞬间，所有的焦虑和压力都随风而去。"},
-        "OFBH": {n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",r:"10.6%",d:"<b>“箭箭不中箭箭中，快门声响万两金。”</b>\n你是负责把射箭拍成电影的人。"},
-        "TFBH_G": {n:"草丛探险家",c:"ARROW-FINDER",cl:"green",r:"5.3%",d:"<b>“箭靶只是参考，大自然才是归宿。”</b>\n寻找箭矢的时间远多于射箭的时间。"},
-        "TFBM_B": {n:"擦边艺术家",c:"CBZ",cl:"green",r:"9.1%",d:"<b>“我不是在打靶，我是在调戏环线。”</b>\n箭馆的快乐担当。"}
+        "TFCH": {n:"扫地僧",c:"MONK",cl:"yellow",d:"<b>“顶级的大师，往往以最朴素的形态出现。”</b>\n隐于市的修行者。瞄具是弱者的拐杖，你从不说话，但全场都知道你是天花板。"},
+        "TFBM": {n:"传统大神",c:"JUST-FEEL",cl:"yellow",d:"<b>“数据会骗人，但手感永远忠诚。”</b>\n拒绝工业精密，迷恋纯粹手感。你开弓时的那种韵律感就是你的超能力。"},
+        "OPBM": {n:"随缘狙击手",c:"X-MAN",cl:"yellow",d:"<b>“他不看靶，靶却在看他。”</b>\n随性是你的底色，准头是你的谜团。"},
+        "OPCM": {n:"器材质检员",c:"FIX-MAN",cl:"yellow",d:"<b>“工欲善其事，必先买买买。”</b>\n你是箭馆移动的维修站，相比打靶，你更享受调校器材。"},
+        "OPCH": {n:"文化布道师",c:"OLD-STYLE",cl:"blue",d:"<b>“射以观德，古礼不能废。”</b>\n比起中靶，更看重开弓那一刻的精气神。"},
+        "TPCM": {n:"人形卡尺",c:"10-10-10",cl:"blue",d:"<b>“情感只会影响我撒放的速度。”</b>\n追求极致精密。你不需要社交，你只需要十环。"},
+        "TPCH": {n:"枯燥苦修僧",c:"NO-BB",cl:"blue",d:"<b>“莫挨老子，我正跟我的弓进行灵魂交流。”</b>\n极度自律，最烦别人搭话。"},
+        "OFCM": {n:"动作质检员",c:"GOOD-POSER",cl:"blue",d:"<b>“中不中不重要，姿态一定要顶。”</b>\n姿态优美是你的最后底线。"},
+        "TFBH": {n:"倔强青铜",c:"HARD-MODE",cl:"purple",d:"<b>“明知山有虎，偏向虎山行。”</b>\n拿着最难练的传统弓死磕。"},
+        "TPBM": {n:"流程优化专家",c:"ALWAYS-BETA",cl:"purple",d:"<b>“我的动作永远处于测试版。”</b>\n动作版本永远在优化，从未稳定上线。"},
+        "OPBH": {n:"悲情练习生",c:"I SHY",cl:"purple",d:"<b>“独自练习是战神，有人围观就炸坑。”</b>\n社交关注是你最沉重的负担。"},
+        "OFCH": {n:"佛系神箭手",c:"FREE-STYLE",cl:"purple",d:"<b>“撒放那一刻，一切交给天意。”</b>\n随手一放皆是缘分。"},
+        "TFCM": {n:"节奏大师",c:"SWING",cl:"green",d:"<b>“射箭就是我的灵魂蹦迪。”</b>\n对节奏感要求极高。弦响瞬间，所有的焦虑和压力都随风而去。"},
+        "OFBH": {n:"古典气氛组",c:"PHOTO-ONLY",cl:"green",d:"<b>“箭箭不中箭箭中，快门声响万两金。”</b>\n你是负责把射箭拍成电影的人。"},
+        "TFBH_G": {n:"草丛探险家",c:"ARROW-FINDER",cl:"green",d:"<b>“箭靶只是参考，大自然才是归宿。”</b>\n寻找箭矢的时间远多于射箭的时间。"},
+        "TFBM_B": {n:"擦边艺术家",c:"CBZ",cl:"green",d:"<b>“我不是在打靶，我是在调戏环线。”</b>\n箭馆的快乐担当。"}
     };
 
     let step=0, s={O:0,T:0,P:0,F:0,C:0,B:0,M:0,H:0}, finalCode="";
@@ -104,10 +103,6 @@
         if(finalCode === "TFBM" && s.F >= 2) finalCode = "TFBM_B";
 
         const d = resultsData[finalCode] || resultsData["TPCM"];
-        
-        // 动态模拟序号
-        const userCount = Math.floor(Date.now() / 1000000) - 1714000;
-        const statText = `你是第 ${userCount > 0 ? userCount : 1248} 位参与鉴定的箭友，全服占比仅 ${d.r}`;
 
         document.getElementById('quiz').style.display='none';
         document.getElementById('result').style.display='block';
@@ -115,15 +110,14 @@
         document.getElementById('res-card').style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(`--${d.cl}-bg`);
         document.getElementById('res-name').innerText = d.n;
         document.getElementById('res-code').innerText = d.c;
-        document.getElementById('res-stat').innerText = statText;
         document.getElementById('res-desc').innerHTML = d.d.replace(/\n/g, '<br>');
     }
 
     function generateCanvasImage(){
         const d = resultsData[finalCode];
         const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
-        canvas.width = 800; canvas.height = 1260;
-        ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,800,1260);
+        canvas.width = 800; canvas.height = 1180; // 稍微缩短高度，去除占比行
+        ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,800,1180);
         ctx.fillStyle = "#333"; ctx.font = "bold 36px sans-serif"; ctx.textAlign = "center";
         ctx.fillText("ABTI打弓人箭格鉴定局", 400, 80);
         
@@ -133,21 +127,17 @@
             ctx.fillStyle = "#333"; ctx.font = "bold 70px sans-serif"; ctx.fillText(d.n, 400, 650);
             ctx.fillStyle = "#8d6e63"; ctx.font = "bold 50px sans-serif"; ctx.fillText(d.c, 400, 720);
             
-            // Canvas 中绘制红色占比
-            ctx.fillStyle = "#ff4757"; ctx.font = "bold 30px sans-serif";
-            ctx.fillText(`全服仅有 ${d.r} 的人拥有此箭格`, 400, 780);
-
-            ctx.fillStyle = "#f5f5f5"; ctx.fillRect(60, 820, 680, 310);
+            ctx.fillStyle = "#f5f5f5"; ctx.fillRect(60, 780, 680, 260);
             ctx.textAlign = "left"; ctx.fillStyle = "#333";
             const lines = d.d.split('\n');
-            let y = 880;
+            let y = 840;
             lines.forEach((line, index) => {
                 ctx.font = index === 0 ? "bold 28px sans-serif" : "24px sans-serif";
                 ctx.fillText(line.replace(/<b>|<\/b>/g, ''), 100, y); y += 50;
             });
             
             ctx.textAlign = "center"; ctx.fillStyle = "#bbb"; ctx.font = "22px sans-serif";
-            ctx.fillText("长沙百杨顾顾 wechat:gyndwxh", 400, 1200);
+            ctx.fillText("长沙百杨顾顾 wechat:gyndwxh", 400, 1120);
             document.getElementById('final-image').src = canvas.toDataURL();
             document.getElementById('canvas-mask').style.display = 'flex';
         };
